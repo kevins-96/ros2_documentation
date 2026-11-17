@@ -1,0 +1,14 @@
+<!-- path 是库名，不带 lib 前缀和 .so 后缀 -->
+<library path="path_smoother_plugins">
+  <!-- 有 name：用 name 查找（"moving_average"） -->
+  <class name="moving_average"
+         type="path_smoother_plugins::MovingAverageSmoother"
+         base_class_type="path_smoother_core::Smoother">
+    <description>Moving average over a symmetric window, endpoints fixed.</description>
+  </class>
+  <!-- 没有 name：查找名就是 type -->
+  <class type="path_smoother_plugins::NoopSmoother"
+         base_class_type="path_smoother_core::Smoother">
+    <description>Returns the path unchanged.</description>
+  </class>
+</library>

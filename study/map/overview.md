@@ -33,11 +33,11 @@ mindmap
       ✅ 进程内通信与零拷贝
       ✅ 实时编程
     把代码变成能交付的包
-      工作空间与 colcon
-      ament_cmake
-      rosdep 依赖管理
-      pluginlib 插件
-      测试
+      ✅ 工作空间与 colcon
+      ✅ ament_cmake
+      ✅ rosdep 依赖管理
+      ✅ pluginlib 插件
+      ✅ 测试
     看见系统在干什么
       命令行工具
       rosbag 录制回放
@@ -83,6 +83,12 @@ Mermaid 节点在 Obsidian 和 VS Code 里都不能稳定地点击跳转，导�
   - [组件与组合 Component](../cards/concurrency/component.md) · 练习：[组件与容器](../labs/component-container.md)
   - [进程内通信与零拷贝](../cards/concurrency/intra-process.md) · 练习：[进程内通信与零拷贝](../labs/intra-process-zero-copy.md)
   - [实时编程 Real-time](../cards/concurrency/realtime.md) · 练习：[实时循环的抖动](../labs/realtime-jitter.md)
-- **把代码变成能交付的包：工程化**（第 5 批，待建）
+- **把代码变成能交付的包：工程化**（第 5 批）
+  - [工作空间与 colcon](../cards/engineering/workspace-colcon.md)
+  - [ament_cmake](../cards/engineering/ament-cmake.md)
+  - [rosdep 依赖管理](../cards/engineering/rosdep.md)
+  - 练习：[编译与依赖的常见错误](../labs/build-pitfalls.md)（覆盖上面三张卡片）
+  - [pluginlib 插件](../cards/engineering/pluginlib.md) · 练习：[用插件换路径平滑器](../labs/plugin-smoother.md)
+  - [测试 Testing](../cards/engineering/testing.md) · 练习：[测试与代码规范检查](../labs/testing-and-lint.md)
 - **看见系统在干什么：调试与观测**（第 6 批，待建）
 - **让多台机器连起来：中间件与部署**（第 7 批，待建）

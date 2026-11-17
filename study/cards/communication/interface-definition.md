@@ -121,7 +121,7 @@ msg.waypoints.resize(2);                              // 有界数组，最多 1
 
 - [话题](topic.md)、[服务](service.md)、[动作](action.md)：分别用 `.msg`、`.srv`、`.action`
 - [话题进阶](topic-advanced.md)：键控话题需要用 IDL 的 `@key` 注解
-- ament_cmake、包结构（第 5 批）
+- [ament_cmake](../engineering/ament-cmake.md)：`rosidl_generate_interfaces` 也是 ament 扩展点；包结构见 [工作空间与 colcon](../engineering/workspace-colcon.md)
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/interface-definition-answers.md)）
