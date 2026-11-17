@@ -4,7 +4,7 @@
 
 - **发行版：** ROS 2 Rolling
 - **打开方式：** 用 Obsidian 把仓库根目录作为 vault 打开，或用 VS Code 打开仓库后预览 Markdown（VS Code 需装扩展 *Markdown Preview Mermaid Support* 才能显示图）
-- **进度：** 见 [路线图](ROADMAP.md)。已完成：通信（第 1 批）、执行器与回调组（样板）
+- **进度：** 见 [路线图](ROADMAP.md)。已完成：通信（第 1 批）、坐标与机器人模型（第 2 批）、执行器与回调组（样板）
 
 ## 三层结构
 
@@ -23,12 +23,14 @@ study/
 ├── map/overview.md      总览脑图 + 链接清单
 ├── cards/
 │   ├── communication/   让模块互相说话
+│   ├── coordinates/     知道东西在哪
 │   └── concurrency/     让回调按时跑
 ├── answers/             自测题答案（xxx-answers.md）
 └── labs/
     ├── *.md             练习说明
     ├── study_interfaces/  自定义 msg/srv/action（练习共用）
     ├── comm_lab/          通信练习与卡片示例代码
+    ├── tf_lab/            坐标变换练习、卡片示例代码与 URDF 模型
     └── executor_lab/      执行器练习与卡片示例代码
 ```
 
@@ -54,7 +56,7 @@ study/
 ```bash
 mkdir -p ~/study_ws/src
 ln -s <你的仓库路径>/study/labs/study_interfaces <你的仓库路径>/study/labs/comm_lab \
-      <你的仓库路径>/study/labs/executor_lab ~/study_ws/src/
+      <你的仓库路径>/study/labs/executor_lab <你的仓库路径>/study/labs/tf_lab ~/study_ws/src/
 cd ~/study_ws && source /opt/ros/rolling/setup.bash
 colcon build && source install/setup.bash
 ```
@@ -66,8 +68,9 @@ colcon build && source install/setup.bash
 每个主题都按同一个节奏：**读卡片 → 合上页面答 2 道自测题 → 对答案 → 做练习（先填预测表）→ 一周后不看卡片重做自测题**。
 
 1. **通信**：[节点](cards/communication/node.md) → [通信方式怎么选](cards/communication/communication-patterns.md) → [话题](cards/communication/topic.md) → [QoS](cards/communication/qos.md)（练习：[QoS 不匹配](labs/qos-mismatch.md)）→ [服务](cards/communication/service.md) → [动作](cards/communication/action.md)（练习：[动作抢占](labs/action-preempt.md)）→ [接口定义](cards/communication/interface-definition.md) → [话题进阶](cards/communication/topic-advanced.md)（选读）
-2. **并发**：[执行器](cards/concurrency/executor.md) → [回调组](cards/concurrency/callback-group.md)（练习：[控制环为什么被卡住](labs/executor-blocking.md)）
-3. 之后的主题按 [路线图](ROADMAP.md) 补齐
+2. **坐标**：[tf2 坐标变换](cards/coordinates/tf2.md) → [四元数](cards/coordinates/quaternion.md)（练习：[四元数与 tf2 缓冲](labs/quaternion-buffer.md)）→ [tf2 与时间](cards/coordinates/tf2-time.md)（练习：[lookupTransform 的时间参数](labs/tf-time-lookup.md)）→ [URDF 与机器人模型](cards/coordinates/urdf.md)（练习：[URDF 关节与 TF](labs/urdf-joint-states.md)）
+3. **并发**：[执行器](cards/concurrency/executor.md) → [回调组](cards/concurrency/callback-group.md)（练习：[控制环为什么被卡住](labs/executor-blocking.md)）
+4. 之后的主题按 [路线图](ROADMAP.md) 补齐
 
 ## 约定
 

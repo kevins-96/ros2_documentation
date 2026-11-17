@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!-- 最小差速底盘：base_footprint -> base_link -> 左右轮（continuous）、激光（fixed）
+     展开：xacro mini_bot.urdf.xacro > mini_bot.urdf
+     检查：check_urdf mini_bot.urdf -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="mini_bot">
+
+  <!-- 常量：改一处，全部生效 -->
+  <xacro:property name="base_len" value="0.40"/>
+  <xacro:property name="base_wid" value="0.30"/>
+  <xacro:property name="base_h" value="0.10"/>
+  <xacro:property name="wheel_r" value="0.05"/>
+  <xacro:property name="wheel_w" value="0.03"/>
+
+  <!-- 参数化宏：长方体的惯量（质量均匀分布） -->
+  <xacro:macro name="box_inertia" params="m x y z">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia ixx="${m*(y*y+z*z)/12}" ixy="0" ixz="0"
+               iyy="${m*(x*x+z*z)/12}" iyz="0"
+               izz="${m*(x*x+y*y)/12}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- 地面投影坐标系：导航栈常用，z = 0 贴地 -->
+  <link name="base_footprint"/>
+
+  <link name="base_link">
+    <visual>
+      <geometry><box size="${base_len} ${base_wid} ${base_h}"/></geometry>
+    </visual>
+    <collision>
+      <geometry><box size="${base_len} ${base_wid} ${base_h}"/></geometry>
+    </collision>
+    <xacro:box_inertia m="5.0" x="${base_len}" y="${base_wid}" z="${base_h}"/>
+  </link>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 ${wheel_r + base_h/2}"/>
+  </joint>
+
+  <!-- 轮子宏：prefix 区分左右，reflect = +1 / -1 决定在哪一侧 -->
+  <xacro:macro name="wheel" params="prefix reflect">
+    <link name="${prefix}_wheel">
+      <visual>
+        <origin rpy="${pi/2} 0 0"/>
+        <geometry><cylinder radius="${wheel_r}" length="${wheel_w}"/></geometry>
+      </visual>
+      <collision>
+        <origin rpy="${pi/2} 0 0"/>
+        <geometry><cylinder radius="${wheel_r}" length="${wheel_w}"/></geometry>
+      </collision>
+      <xacro:box_inertia m="0.3" x="${2*wheel_r}" y="${wheel_w}" z="${2*wheel_r}"/>
+    </link>
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="${prefix}_wheel"/>
+      <origin xyz="0 ${reflect*(base_wid/2 + wheel_w/2)} ${-base_h/2}"/>
+      <axis xyz="0 1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel prefix="left" reflect="1"/>
+  <xacro:wheel prefix="right" reflect="-1"/>
+
+  <link name="laser"/>
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser"/>
+    <origin xyz="0.15 0 ${base_h/2 + 0.05}"/>
+  </joint>
+
+</robot>
