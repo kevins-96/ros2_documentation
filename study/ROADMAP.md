@@ -27,15 +27,22 @@
 
 Python 版教程（`*-Py.rst`、`*-Python.rst`）只用于核对概念，卡片代码以 C++ 为准。
 
-## 第 2 批：知道东西在哪（坐标与机器人模型）
+## 第 2 批：知道东西在哪（坐标与机器人模型）✅
 
-| 计划卡片 | 源文档 |
+| 卡片 | 吸收的源文档 |
 |---|---|
-| tf2 坐标变换 | `interfaces/Working-with-interfaces/About-Tf2/*`、`Introduction-To-Tf2/*`、`client-libraries/.../Tf2/Tf2-Main.rst`、`Writing-A-Tf2-Static-Broadcaster-Cpp.rst`、`Writing-A-Tf2-Broadcaster-Cpp.rst`、`Writing-A-Tf2-Listener-Cpp.rst`、`Adding-A-Frame-Cpp.rst` |
-| tf2 与时间 | `Tf2/Learning-About-Tf2-And-Time-Cpp.rst`、`Time-Travel-With-Tf2-Cpp.rst`、`Using-Stamped-Datatypes-With-Tf2-Ros-MessageFilter.rst`、`Developer-Tools/Debugging/Debugging-Tf2-Problems/*` |
-| 四元数 | `Working-with-interfaces/Quaternion-Fundamentals.rst` |
-| URDF 与机器人模型 | `Capabilities/Simulation/URDF/*`、`Developer-Tools/Build/Using-Xacro-to-Clean-Up-a-URDF-File/*`、`Capabilities/Simulation/dummy-robot/*` |
-| 缓冲后端（可选） | `Working-with-interfaces/Buffer-Backends/*`（含 GPU 传输，偏感知，按需） |
+| ✅ [tf2 坐标变换](cards/coordinates/tf2.md) | `interfaces/Working-with-interfaces/About-Tf2/*`、`Introduction-To-Tf2/*`、`client-libraries/Working-with-Client-Libraries/Tf2/Tf2-Main.rst`、`Writing-A-Tf2-Static-Broadcaster-Cpp.rst`、`Writing-A-Tf2-Broadcaster-Cpp.rst`、`Writing-A-Tf2-Listener-Cpp.rst`、`Adding-A-Frame-Cpp.rst`、`Developer-Tools/Debugging/Debugging-Tf2-Problems/*`（工具部分） |
+| ✅ [tf2 与时间](cards/coordinates/tf2-time.md) | `Tf2/Learning-About-Tf2-And-Time-Cpp.rst`、`Time-Travel-With-Tf2-Cpp.rst`、`Using-Stamped-Datatypes-With-Tf2-Ros-MessageFilter.rst`、`Debugging-Tf2-Problems/*`（时间部分） |
+| ✅ [四元数](cards/coordinates/quaternion.md) | `Working-with-interfaces/Quaternion-Fundamentals.rst` |
+| ✅ [URDF 与机器人模型](cards/coordinates/urdf.md) | `Capabilities/Simulation/URDF/*`（6 篇）、`Developer-Tools/Build/Using-Xacro-to-Clean-Up-a-URDF-File/*`、`Capabilities/Simulation/dummy-robot/*` |
+
+练习：✅ [lookupTransform 的时间参数](labs/tf-time-lookup.md)、✅ [四元数与 tf2 缓冲](labs/quaternion-buffer.md)、✅ [URDF 关节与 TF](labs/urdf-joint-states.md)。
+
+本批实测发现的文档与 Rolling 不一致之处（详见各卡片"常见坑"）：广播器构造传 `this` 编译不过；MessageFilter 教程 3 处 API 过时；`tf2_echo` 参数名与实际语义相反；xacro 找不到宏时现在会报错。
+
+Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）只用于核对概念。
+
+`Buffer-Backends/*`（`rosidl::Buffer`、GPU 内存传输）原计划放在本批，读后发现它讲的是消息内存而不是 tf2 缓冲，移到第 4 批"进程内通信与零拷贝"。
 
 ## 第 3 批：让节点可配置可启停（配置与启停）
 
@@ -54,7 +61,7 @@ Python 版教程（`*-Py.rst`、`*-Python.rst`）只用于核对概念，卡片�
 |---|---|
 | ✅ 执行器、✅ 回调组 | `client-libraries/About-Executors/*`、`nodes/Working-with-nodes/Using-callback-groups.rst` |
 | 组件与组合 | `nodes/About-Composition.rst`、`Composition.rst`、`Writing-a-Composable-Node.rst`、`Developer-Tools/Launch/Launching-composable-nodes.rst` |
-| 进程内通信与零拷贝 | `nodes/Working-with-nodes/intra-process/*`、`Configure-ZeroCopy-loaned-messages.rst` |
+| 进程内通信与零拷贝 | `nodes/Working-with-nodes/intra-process/*`、`Configure-ZeroCopy-loaned-messages.rst`、`interfaces/Working-with-interfaces/Buffer-Backends/*`（从第 2 批移来） |
 | 实时编程 | `Capabilities/Motion-planning/Real-Time-Programming.rst`、`Allocator-Template-Tutorial.rst`、`Developer-Tools/Build/Building-Realtime-rt_preempt-kernel-for-ROS-2/*` |
 | 客户端库内部结构（可选） | `About-Client-Libraries.rst`、`About-Internal-Interfaces/*` |
 

@@ -16,10 +16,10 @@ mindmap
       ✅ 接口定义
       ✅ 话题进阶
     知道东西在哪
-      tf2 坐标变换
-      tf2 与时间
-      四元数
-      URDF 与机器人模型
+      ✅ tf2 坐标变换
+      ✅ tf2 与时间
+      ✅ 四元数
+      ✅ URDF 与机器人模型
     让节点可配置可启停
       参数
       生命周期节点
@@ -65,7 +65,11 @@ Mermaid 节点在 Obsidian 和 VS Code 里都不能稳定地点击跳转，导�
   - [动作 Action](../cards/communication/action.md) · 练习：[动作服务端忙时来了新目标](../labs/action-preempt.md)
   - [接口定义 msg / srv / action](../cards/communication/interface-definition.md)
   - [话题进阶：内容过滤、键控话题、等待确认](../cards/communication/topic-advanced.md)
-- **知道东西在哪：坐标与机器人模型**（第 2 批，待建）
+- **知道东西在哪：坐标与机器人模型**（第 2 批）
+  - [tf2 坐标变换](../cards/coordinates/tf2.md)
+  - [tf2 与时间](../cards/coordinates/tf2-time.md) · 练习：[lookupTransform 的时间参数](../labs/tf-time-lookup.md)
+  - [四元数 Quaternion](../cards/coordinates/quaternion.md) · 练习：[四元数与 tf2 缓冲](../labs/quaternion-buffer.md)
+  - [URDF 与机器人模型](../cards/coordinates/urdf.md) · 练习：[URDF 关节与 TF](../labs/urdf-joint-states.md)
 - **让节点可配置可启停：配置与启停**（第 3 批，待建）
 - **让回调按时跑：并发与实时性**（样板 + 第 4 批）
   - [执行器 Executor](../cards/concurrency/executor.md)
