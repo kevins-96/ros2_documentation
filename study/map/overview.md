@@ -39,11 +39,12 @@ mindmap
       ✅ pluginlib 插件
       ✅ 测试
     看见系统在干什么
-      命令行工具
-      rosbag 录制回放
-      调试与回溯
-      tracing 性能追踪
-      RViz 与可视化
+      ✅ 命令行工具
+      ✅ rosbag 录制回放
+      ✅ 服务与动作内省
+      ✅ 调试与回溯
+      ✅ tracing 性能追踪
+      ✅ RViz 与可视化
     让多台机器连起来
       中间件 RMW 与 DDS
       Domain ID 与发现
@@ -90,5 +91,13 @@ Mermaid 节点在 Obsidian 和 VS Code 里都不能稳定地点击跳转，导�
   - 练习：[编译与依赖的常见错误](../labs/build-pitfalls.md)（覆盖上面三张卡片）
   - [pluginlib 插件](../cards/engineering/pluginlib.md) · 练习：[用插件换路径平滑器](../labs/plugin-smoother.md)
   - [测试 Testing](../cards/engineering/testing.md) · 练习：[测试与代码规范检查](../labs/testing-and-lint.md)
-- **看见系统在干什么：调试与观测**（第 6 批，待建）
+- **看见系统在干什么：调试与观测**（第 6 批）
+  - [命令行工具：ros2 CLI 与 ros2 doctor](../cards/observability/cli-tools.md)
+  - [服务与动作内省](../cards/observability/service-introspection.md)
+  - 练习：[命令行与服务内省](../labs/cli-and-introspection.md)（覆盖上面两张卡片）
+  - [rosbag 录制回放](../cards/observability/rosbag.md) · 练习：[录制、回放与离线分析](../labs/bag-record-replay.md)
+  - [RViz 与可视化](../cards/observability/rviz.md)（Marker 检查在上一个练习的第 7 部分）
+  - [调试与回溯：gdb、构建类型与 IDE](../cards/observability/gdb-debugging.md)
+  - [tracing 性能追踪](../cards/observability/tracing.md)
+  - 练习：[崩溃回溯与回调追踪](../labs/crash-and-trace.md)（覆盖上面两张卡片）
 - **让多台机器连起来：中间件与部署**（第 7 批，待建）

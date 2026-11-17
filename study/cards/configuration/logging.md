@@ -98,7 +98,7 @@ ros2 run rqt_console rqt_console      # 图形界面：收集、过滤、保存 
 - [启动参数与重映射](node-arguments.md)：`--log-level` 等命令行参数，logger 名跟着节点名变
 - [launch 启动系统](launch.md)：`ros_args="--log-level ..."`；`output="screen"` 与 stdout 的关系
 - [话题](../communication/topic.md)：`/rosout` 就是一个普通话题
-- 调试与观测（第 6 批）：rosbag、tracing
+- 调试与观测：[rosbag 录制回放](../observability/rosbag.md)（`ros2 bag record -a` 会录 `/rosout`）、[tracing 性能追踪](../observability/tracing.md)、[RViz 与可视化](../observability/rviz.md)（`rqt_console`）
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/logging-answers.md)）

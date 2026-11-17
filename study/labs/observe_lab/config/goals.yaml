@@ -1,0 +1,19 @@
+# 练习「命令行工具」：ros2 topic pub --yaml-file 一次发多条
+header:
+  frame_id: map
+pose:
+  position: {x: 1.0, y: 0.0, z: 0.0}
+  orientation: {w: 1.0}
+---
+header:
+  frame_id: map
+pose:
+  position: {x: 2.0, y: 0.0, z: 0.0}
+  orientation: {w: 1.0}
+---
+header:
+  frame_id: map
+pose:
+  position: {x: 3.0, y: 0.0, z: 0.0}
+  orientation: {w: 1.0}
+---
