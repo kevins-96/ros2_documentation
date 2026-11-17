@@ -2,8 +2,11 @@
 // 启动时打印"我用的是哪个 RMW、哪个 Domain、什么发现配置、有没有开安全"，
 // 订阅端每秒报告：收到多少条、丢了多少条，以及"图里看到几个发布者 / 实际匹配上几个"。
 // 后两个数不一样，说明"发现了但没匹配"（QoS 不兼容、分区不同、匹配数上限……）。
+#include <algorithm>
+#include <array>
 #include <chrono>
 #include <cstdlib>
+#include <map>
 #include <memory>
 #include <string>
 
@@ -67,27 +70,43 @@ public:
             static_cast<unsigned long>(seq_), pub_->get_subscription_count());
         });
     } else {
+      // 第二个参数 MessageInfo 带着发布者的 GID，用来按发布者分别数丢包
       sub_ = create_subscription<std_msgs::msg::String>(topic_, qos,
-          [this](const std_msgs::msg::String & msg) {on_message(msg);});
+          [this](const std_msgs::msg::String & msg, const rclcpp::MessageInfo & info) {
+            on_message(msg, info);
+          });
       report_ = create_wall_timer(1s, [this]() {report();});
     }
   }
 
 private:
-  void on_message(const std_msgs::msg::String & msg)
+  void on_message(const std_msgs::msg::String & msg, const rclcpp::MessageInfo & info)
   {
-    // 从 "hello #123 xxx" 里取出序号，用序号跳变来数丢包
+    ++window_;
+    ++total_;
+    // 从 "hello #123 xxx" 里取出序号；格式不对（比如别人往同一话题发的消息）就只计数、不算丢包
     const auto pos = msg.data.find(" #");
     if (pos == std::string::npos) {
       return;
     }
-    const long seq = std::stol(msg.data.substr(pos + 2));
-    if (last_seq_ >= 0 && seq > last_seq_ + 1) {
-      lost_ += seq - last_seq_ - 1;
+    const char * begin = msg.data.c_str() + pos + 2;
+    char * end = nullptr;
+    const long seq = std::strtol(begin, &end, 10);
+    if (end == begin) {
+      return;
+    }
+    // 每个发布者各自一条序号流：多个发布者时不能拿 A 的序号去和 B 的比
+    const auto & gid = info.get_rmw_message_info().publisher_gid;
+    std::array<uint8_t, RMW_GID_STORAGE_SIZE> key{};
+    std::copy(std::begin(gid.data), std::end(gid.data), key.begin());
+    auto [it, inserted] = last_seq_by_pub_.try_emplace(key, seq);
+    if (!inserted) {
+      if (seq > it->second + 1) {
+        lost_ += seq - it->second - 1;
+      }
+      it->second = seq;
     }
     last_seq_ = seq;
-    ++window_;
-    ++total_;
   }
 
   void report()
@@ -104,6 +123,7 @@ private:
   std::string mode_, topic_, text_, padding_;
   uint64_t seq_{0};
   long last_seq_{-1}, lost_{0}, window_{0}, total_{0};
+  std::map<std::array<uint8_t, RMW_GID_STORAGE_SIZE>, long> last_seq_by_pub_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_;
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr sub_;
   rclcpp::TimerBase::SharedPtr timer_, report_;
