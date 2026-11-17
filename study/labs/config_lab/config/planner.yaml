@@ -1,0 +1,12 @@
+# 参数文件：顶层键是「节点全名」，下面固定写 ros__parameters
+/**/planner:                 # 任意命名空间下名为 planner 的节点
+  ros__parameters:
+    max_speed: 0.8
+    robot_id: "bot_7"          # 只读参数只能在这里（启动时）给值
+    controller:                # 嵌套写法 = 代码里的 controller.kp
+      kp: 2.0
+      ki: 0.1
+
+/**:                          # 所有节点
+  ros__parameters:
+    use_sim_time: false

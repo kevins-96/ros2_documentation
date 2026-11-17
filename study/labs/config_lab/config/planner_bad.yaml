@@ -1,0 +1,7 @@
+# 练习用的「错误」参数文件，每一行都有问题
+planer:                        # 节点名拼错
+  ros__parameters:
+    max_speed: 0.9
+planner:
+  ros__parameters:
+    max_speed: 1               # 整数写给 double 参数
