@@ -136,7 +136,7 @@ ros2 launch perf_lab lidar_container_launch.xml ipc:=true
 
 🔍 以下结果来自[组件与容器练习](../../labs/component-container.md)的实测。
 
-1. **构造函数里做耗时操作，卡住整个容器。** 📄 组件不拥有线程，构造函数里不该阻塞。🔍 在单线程容器里加载一个构造函数睡 6 s 的组件，同一容器里 `cloud_filter` 的统计输出**中断了 6 秒**，期间一条消息都没处理。换成 `--executor-type multi-threaded` 后，其他组件照常运行。💡 等硬件、加载地图这类操作放进[生命周期节点](../configuration/lifecycle-node.md)的 `on_configure`，或者用定时器延后。
+1. **构造函数里做耗时操作，卡住整个容器。** 📄 组件不拥有线程，构造函数里不该阻塞。🔍 在单线程容器里加载一个构造函数睡 6 s 的组件，同一容器里 `cloud_filter` 的统计输出**中断了 6 秒**，期间一条消息都没处理。换成 `--executor-type multi-threaded` 后，其他组件照常运行。💡 注意：把等硬件、加载地图挪到[生命周期节点](../configuration/lifecycle-node.md)的 `on_configure` 或定时器回调里，只是让**加载**不再卡住；这些回调同样在容器的执行器线程里运行，单线程容器照样会停住。真正的解法是：耗时操作放进单独的线程（或异步接口），完成后再通知节点；或者至少用多线程容器，并把这类回调放进单独的回调组。
 2. **原来的 `main` 里用的是多线程执行器。** 📄 改成组件后 `main` 没了，要记得给容器加 `--executor-type multi-threaded`，否则原来依赖并行的回调组设计会失效（见[回调组](callback-group.md)）。
 3. **容器的命名空间不会传给组件。** 🔍 容器用 `-r __ns:=/robot1` 启动后，加载的 `FakeLidar` 仍是 `/fake_lidar`，发布 `/cloud`；只有加 `--node-namespace /robot1` 的组件才在 `/robot1` 下。📄 文档原话："Namespace remappings of the container do not affect loaded components." 🔍 launch 里也一样：`<node exec="component_container" namespace="robot2"/>` 再用 `load_composable_node` 加载的组件是 `/cloud_filter`。但 `push_ros_namespace` 会作用到同一组里 `node_container` 下的 `composable_node`（实测得到 `/robot1/fake_lidar`），因为它改的是 launch 的命名空间，而不是容器进程的。
 4. **命名空间不一致，组件之间静默断开。** 🔍 同一个容器里，`--node-namespace /robot1` 的 `cloud_filter` 订阅的是 `/robot1/cloud`，而发布者在 `/cloud`，结果一直 `no cloud received`，没有任何报错。

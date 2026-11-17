@@ -24,7 +24,7 @@ ROS 2 有三种减少复制的机制，作用范围不同（📄）：
 | 机制 | 范围 | 前提 |
 |---|---|---|
 | 进程内通信 | 同一进程 | 节点开 `use_intra_process_comms(true)`；发布 `unique_ptr` |
-| 借用消息（loaned message） | 跨进程、同一主机（共享内存） | RMW 支持；消息是定长 POD 类型 |
+| 借用消息（loaned message） | 由 RMW 分配和管理消息内存；RMW 有共享内存传输时，同一主机跨进程可以零拷贝 | RMW 支持借用；Fast DDS 要求定长 POD 类型 |
 | `rosidl::Buffer` 后端（Buffer Backend） | `uint8[]` 等变长数组字段放在 GPU 等非 CPU 内存 | 安装了对应后端插件；目前只支持话题 |
 
 ### 消息有没有被复制：看回调签名 📄 🔍
@@ -103,7 +103,7 @@ pod_pub->publish(std::move(loaned));              // 发布后借来的消息失
    - `auto d = msg.data` 得到的是 `rosidl::Buffer`，不是 `std::vector`，后面按 `std::vector` 使用会出问题。
 
    💡 改法：显式写 `std::vector<uint8_t> & v = msg.data;` 再用 `v`。📄 只有 CPU 后端才能隐式转换；收到非 CPU 后端的消息前要先判断 `msg->data.get_backend_type()`。
-7. **以为进程间也能零拷贝。** 📄 进程内通信只在同一进程里有效。🔍 跨进程时一帧 1 MB 的点云在 SensorDataQoS 下 2 秒只收到 0~1 帧（详见[组件与组合](component.md)）。跨进程零拷贝要靠借用消息（共享内存）或 Buffer 后端，这两者都依赖 RMW。
+7. **以为进程间也能零拷贝。** 📄 进程内通信只在同一进程里有效。🔍 跨进程时一帧 1 MB 的点云在 SensorDataQoS 下 2 秒只收到 0~1 帧（详见[组件与组合](component.md)）。跨进程要减少复制，得靠 RMW 的共享内存传输（借用消息让发布者直接写进 RMW 管理的内存，是用好它的前提），或者 Buffer 后端。这些都依赖具体的 RMW 和配置。
 8. **借用消息只对定长类型生效。** 🔍 `String` 不能借用，`Float64` 可以。📄 文档要求 Fast DDS 下借用的消息是 POD 类型。💡 所以 `PointCloud2`、`Image` 这类含变长数组的消息也借不了（未实测）。
 
 ## 5. 与其他概念的关系

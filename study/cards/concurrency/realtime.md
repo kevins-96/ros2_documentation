@@ -53,6 +53,7 @@ flowchart TB
 
 ```cpp
 #include <pthread.h>
+#include <sched.h>        // SCHED_FIFO、sched_param
 #include <sys/mman.h>
 #include <time.h>
 

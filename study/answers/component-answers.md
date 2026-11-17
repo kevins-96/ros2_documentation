@@ -10,8 +10,8 @@
 
 改法：
 1. 构造函数里只声明参数、创建发布者和订阅。等串口放到：
-   - 生命周期节点的 `on_configure`（推荐，💡 打不开返回 FAILURE，可以重试），或者
-   - 一次性定时器 / 后台线程，连上之后再开始工作。
+   - 生命周期节点的 `on_configure`（💡 打不开返回 FAILURE，可以重试）。但 `on_configure` 也是在容器的执行器线程里执行的，等 10 秒同样会卡住单线程容器，所以要配合下面两条之一；
+   - 后台线程（或带超时的非阻塞打开 + 定时器重试），连上之后再开始工作。这是不卡执行器的根本办法。
 2. 容器改成多线程：`component_container --executor-type multi-threaded`（launch 里 `exec="component_container_mt"` 也可以），线程数用 `thread_num` 参数。🔍 实测多线程容器里，即使有组件构造函数阻塞，其他组件也照常运行。
 
 💡 即使用了多线程容器，构造函数阻塞仍然会让 `ros2 component load`（以及 launch 的加载）一直等着，launch 的加载超时后会报错。根本解法是第 1 条。
