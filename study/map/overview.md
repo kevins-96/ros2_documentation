@@ -29,9 +29,9 @@ mindmap
     让回调按时跑
       ✅ 执行器
       ✅ 回调组
-      组件与组合
-      进程内通信与零拷贝
-      实时编程
+      ✅ 组件与组合
+      ✅ 进程内通信与零拷贝
+      ✅ 实时编程
     把代码变成能交付的包
       工作空间与 colcon
       ament_cmake
@@ -80,7 +80,9 @@ Mermaid 节点在 Obsidian 和 VS Code 里都不能稳定地点击跳转，导�
   - [执行器 Executor](../cards/concurrency/executor.md)
   - [回调组 Callback Group](../cards/concurrency/callback-group.md)
   - 练习：[控制环为什么被卡住](../labs/executor-blocking.md)
-  - 组件、进程内通信、实时编程（第 4 批，待建）
+  - [组件与组合 Component](../cards/concurrency/component.md) · 练习：[组件与容器](../labs/component-container.md)
+  - [进程内通信与零拷贝](../cards/concurrency/intra-process.md) · 练习：[进程内通信与零拷贝](../labs/intra-process-zero-copy.md)
+  - [实时编程 Real-time](../cards/concurrency/realtime.md) · 练习：[实时循环的抖动](../labs/realtime-jitter.md)
 - **把代码变成能交付的包：工程化**（第 5 批，待建）
 - **看见系统在干什么：调试与观测**（第 6 批，待建）
 - **让多台机器连起来：中间件与部署**（第 7 批，待建）

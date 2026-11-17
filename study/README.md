@@ -4,7 +4,7 @@
 
 - **发行版：** ROS 2 Rolling
 - **打开方式：** 用 Obsidian 把仓库根目录作为 vault 打开，或用 VS Code 打开仓库后预览 Markdown（VS Code 需装扩展 *Markdown Preview Mermaid Support* 才能显示图）
-- **进度：** 见 [路线图](ROADMAP.md)。已完成：通信（第 1 批）、坐标与机器人模型（第 2 批）、配置与启停（第 3 批）、执行器与回调组（样板）
+- **进度：** 见 [路线图](ROADMAP.md)。已完成：通信（第 1 批）、坐标与机器人模型（第 2 批）、配置与启停（第 3 批）、并发与实时性（样板 + 第 4 批）
 
 ## 三层结构
 
@@ -33,6 +33,7 @@ study/
     ├── comm_lab/          通信练习与卡片示例代码
     ├── tf_lab/            坐标变换练习、卡片示例代码与 URDF 模型
     ├── config_lab/        参数、生命周期、launch、日志练习与卡片示例代码
+    ├── perf_lab/          组件、进程内通信、借用消息、实时循环练习
     └── executor_lab/      执行器练习与卡片示例代码
 ```
 
@@ -59,7 +60,7 @@ study/
 mkdir -p ~/study_ws/src
 ln -s <你的仓库路径>/study/labs/study_interfaces <你的仓库路径>/study/labs/comm_lab \
       <你的仓库路径>/study/labs/executor_lab <你的仓库路径>/study/labs/tf_lab \
-      <你的仓库路径>/study/labs/config_lab ~/study_ws/src/
+      <你的仓库路径>/study/labs/config_lab <你的仓库路径>/study/labs/perf_lab ~/study_ws/src/
 cd ~/study_ws && source /opt/ros/rolling/setup.bash
 colcon build && source install/setup.bash
 ```
@@ -73,7 +74,7 @@ colcon build && source install/setup.bash
 1. **通信**：[节点](cards/communication/node.md) → [通信方式怎么选](cards/communication/communication-patterns.md) → [话题](cards/communication/topic.md) → [QoS](cards/communication/qos.md)（练习：[QoS 不匹配](labs/qos-mismatch.md)）→ [服务](cards/communication/service.md) → [动作](cards/communication/action.md)（练习：[动作抢占](labs/action-preempt.md)）→ [接口定义](cards/communication/interface-definition.md) → [话题进阶](cards/communication/topic-advanced.md)（选读）
 2. **坐标**：[tf2 坐标变换](cards/coordinates/tf2.md) → [四元数](cards/coordinates/quaternion.md)（练习：[四元数与 tf2 缓冲](labs/quaternion-buffer.md)）→ [tf2 与时间](cards/coordinates/tf2-time.md)（练习：[lookupTransform 的时间参数](labs/tf-time-lookup.md)）→ [URDF 与机器人模型](cards/coordinates/urdf.md)（练习：[URDF 关节与 TF](labs/urdf-joint-states.md)）
 3. **配置与启停**：[参数](cards/configuration/parameter.md)（练习：[参数的规则与陷阱](labs/parameter-rules.md)）→ [启动参数与重映射](cards/configuration/node-arguments.md) → [launch 启动系统](cards/configuration/launch.md)（练习：[launch 与名字解析](labs/launch-and-names.md)）→ [日志](cards/configuration/logging.md) → [生命周期节点](cards/configuration/lifecycle-node.md)（练习：[生命周期状态切换](labs/lifecycle-transitions.md)）
-4. **并发**：[执行器](cards/concurrency/executor.md) → [回调组](cards/concurrency/callback-group.md)（练习：[控制环为什么被卡住](labs/executor-blocking.md)）
+4. **并发与实时性**：[执行器](cards/concurrency/executor.md) → [回调组](cards/concurrency/callback-group.md)（练习：[控制环为什么被卡住](labs/executor-blocking.md)）→ [组件与组合](cards/concurrency/component.md)（练习：[组件与容器](labs/component-container.md)）→ [进程内通信与零拷贝](cards/concurrency/intra-process.md)（练习：[进程内通信与零拷贝](labs/intra-process-zero-copy.md)）→ [实时编程](cards/concurrency/realtime.md)（练习：[实时循环的抖动](labs/realtime-jitter.md)）
 5. 之后的主题按 [路线图](ROADMAP.md) 补齐
 
 ## 约定

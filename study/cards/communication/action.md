@@ -135,7 +135,7 @@ CMake：除了 `rclcpp` 还要 `rclcpp_action`；文档教程还用 `rclcpp_comp
 - [通信方式怎么选](communication-patterns.md) · [服务](service.md)（动作 = 3 个服务 + 2 个话题）
 - [接口定义](interface-definition.md)：`.action` 文件的三段式
 - [回调组](../concurrency/callback-group.md)、[执行器](../concurrency/executor.md)：服务端回调不能阻塞
-- 组件（第 4 批）：文档教程把动作服务端写成组件
+- [组件与组合](../concurrency/component.md)：文档教程把动作服务端写成组件
 - 练习：[动作服务端忙时来了新目标](../../labs/action-preempt.md)
 - 上一级：[总览脑图](../../map/overview.md)
 

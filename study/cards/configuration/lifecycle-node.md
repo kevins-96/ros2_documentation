@@ -165,7 +165,7 @@ node_info(*lc_node);   // LifecycleNode
 - [参数](parameter.md)：构造时声明，configure 时读取
 - [launch 启动系统](launch.md)：`lifecycle_node` + `autostart`
 - [话题](../communication/topic.md)：`LifecyclePublisher`
-- 组件与组合（第 4 批）：生命周期节点也可以做成组件
+- [组件与组合](../concurrency/component.md)：生命周期节点也可以做成组件
 - 练习：[生命周期状态切换](../../labs/lifecycle-transitions.md)
 - 上一级：[总览脑图](../../map/overview.md)
 

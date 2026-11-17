@@ -63,15 +63,23 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 
 本批实测发现的值得注意之处（详见各卡片"常见坑"）：启动时给值不经过参数回调；double 参数启动时传整数会让节点崩溃；`LaunchConfiguration` 在 Python 里不能直接比较；命名空间下 `--log-level` 要写 `命名空间.节点名`；仓库示例 `different_formats_launch.py` 的 `PushROSNamespace` 用了字面量而不是 launch 参数。
 
-## 第 4 批：让回调按时跑（并发与性能补全）
+## 第 4 批：让回调按时跑（并发与性能补全）✅
 
-| 计划卡片 | 源文档 |
+| 卡片 | 吸收的源文档 |
 |---|---|
-| ✅ 执行器、✅ 回调组 | `client-libraries/About-Executors/*`、`nodes/Working-with-nodes/Using-callback-groups.rst` |
-| 组件与组合 | `nodes/About-Composition.rst`、`Composition.rst`、`Writing-a-Composable-Node.rst`、`Developer-Tools/Launch/Launching-composable-nodes.rst` |
-| 进程内通信与零拷贝 | `nodes/Working-with-nodes/intra-process/*`、`Configure-ZeroCopy-loaned-messages.rst`、`interfaces/Working-with-interfaces/Buffer-Backends/*`（从第 2 批移来） |
-| 实时编程 | `Capabilities/Motion-planning/Real-Time-Programming.rst`、`Allocator-Template-Tutorial.rst`、`Developer-Tools/Build/Building-Realtime-rt_preempt-kernel-for-ROS-2/*` |
-| 客户端库内部结构（可选） | `About-Client-Libraries.rst`、`About-Internal-Interfaces/*` |
+| ✅ [执行器](cards/concurrency/executor.md)、✅ [回调组](cards/concurrency/callback-group.md)（样板） | `client-libraries/About-Executors/*`、`nodes/Working-with-nodes/Using-callback-groups.rst` |
+| ✅ [组件与组合](cards/concurrency/component.md) | `nodes/About-Composition.rst`、`nodes/Working-with-nodes/Composition.rst`、`Writing-a-Composable-Node.rst`、`Developer-Tools/Launch/Launching-composable-nodes.rst` |
+| ✅ [进程内通信与零拷贝](cards/concurrency/intra-process.md) | `nodes/Working-with-nodes/intra-process/*`、`client-libraries/Working-with-Client-Libraries/Configure-ZeroCopy-loaned-messages.rst`、`interfaces/Working-with-interfaces/Buffer-Backends/About-Buffer-Backends.rst`、`Using-Buffer-Backends.rst` |
+| ✅ [实时编程](cards/concurrency/realtime.md) | `Capabilities/Motion-planning/Real-Time-Programming.rst`、`client-libraries/Working-with-Client-Libraries/Allocator-Template-Tutorial.rst`、`Developer-Tools/Build/Building-Realtime-rt_preempt-kernel-for-ROS-2/*`（只收结论） |
+
+练习：✅ [组件与容器](labs/component-container.md)、✅ [进程内通信与零拷贝](labs/intra-process-zero-copy.md)、✅ [实时循环的抖动](labs/realtime-jitter.md)。代码在 `labs/perf_lab/`。
+
+调整说明：
+- `Buffer-Backends` 里写后端插件（`Writing-a-Buffer-Backend.rst`、`Writing-a-Buffer-Compatible-Conversions-Package.rst`）和 GPU 演示（`GPU-Buffer-Transport.rst`）面向厂商和 CUDA 环境，没有收；卡片只收用户需要知道的部分：`uint8[]` 在 Rolling 生成 `rosidl::Buffer`、订阅端怎么选后端。
+- RT_PREEMPT 内核编译教程基于 Ubuntu 20.04 / 5.4 内核，步骤已过时，只收"为什么需要 RT 内核"的结论。
+- 原计划的"客户端库内部结构（可选）"（`About-Client-Libraries.rst`、`About-Internal-Interfaces/*`）暂不做，需要时再补。
+
+本批实测发现的值得注意之处（详见各卡片"常见坑"）：Rolling 里 `uint8[]` 字段变成 `rosidl::Buffer`，部分旧代码写法编译失败；进程内通信 + `KeepAll` 会抛异常；单线程容器里组件构造函数阻塞会让整个容器停住；容器的命名空间不传给组件；跨进程传 1 MB 以上点云在 SensorDataQoS 下几乎全丢；`rclcpp_components` 头文件要求 C++20。
 
 ## 第 5 批：把代码变成能交付的包（工程化）
 
