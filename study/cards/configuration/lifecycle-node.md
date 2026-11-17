@@ -55,11 +55,14 @@ stateDiagram-v2
 
 ## 3. 最小 C++ 代码（rclcpp_lifecycle）
 
-[card_lifecycle_min.cpp](../../labs/config_lab/src/card_lifecycle_min.cpp)：
+节选自 [card_lifecycle_min.cpp](../../labs/config_lab/src/card_lifecycle_min.cpp)（完整文件还有故障注入参数）：
 
 ```cpp
+#include "rclcpp/rclcpp.hpp"
 #include "rclcpp_lifecycle/lifecycle_node.hpp"
 #include "rclcpp_lifecycle/lifecycle_publisher.hpp"
+#include "std_msgs/msg/string.hpp"
+using namespace std::chrono_literals;
 using CallbackReturn = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn;
 
 class LidarDriver : public rclcpp_lifecycle::LifecycleNode
@@ -70,7 +73,11 @@ public:
   CallbackReturn on_configure(const rclcpp_lifecycle::State &) override
   {
     pub_ = create_publisher<std_msgs::msg::String>("scan_status", 10);  // LifecyclePublisher
-    timer_ = create_wall_timer(500ms, [this]() { pub_->publish(make_msg()); });
+    timer_ = create_wall_timer(500ms, [this]() {
+      std_msgs::msg::String m;
+      m.data = "scan " + std::to_string(++count_);
+      pub_->publish(m);                      // 未激活时消息被丢弃
+    });
     return CallbackReturn::SUCCESS;          // FAILURE：留在原状态；ERROR：进 on_error
   }
   CallbackReturn on_activate(const rclcpp_lifecycle::State & s) override
@@ -93,6 +100,7 @@ public:
 private:
   rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::String>::SharedPtr pub_;
   rclcpp::TimerBase::SharedPtr timer_;
+  int count_ = 0;
 };
 
 int main(int argc, char ** argv)

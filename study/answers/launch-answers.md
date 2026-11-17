@@ -26,7 +26,7 @@
 ```
 
 检查点：
-1. `push_ros_namespace` 必须是 `<group>` 里的**第一个**元素。📄 🔍 放在中间时，它前面的节点不受影响。
+1. `push_ros_namespace` 要放在 `<group>` 里的**第一个**。📄 文档原话是"必须放在第一个，后面的动作才会应用命名空间"。🔍 实测它只影响自己后面的动作，放在中间时前面的节点不受影响。
 2. `use_sim_time` 的 `<param>` 写在 `param from` **之后**，这样命令行的 `sim` 值会覆盖 YAML 里的值。🔍 后写的覆盖前写的。
 3. `remap` 的 `from` 写代码里用的名字 `cmd_vel`，不要写 `/robot1/cmd_vel`。结果是 `/robot1/cmd_vel_nav`。
 4. `sim_launch.xml` 放在组外还是组内，取决于仿真器要不要在机器人命名空间下。💡 Gazebo 之类的全局仿真器通常放组外。
@@ -52,4 +52,4 @@ return LaunchDescription([
 ])
 ```
 
-💡 更复杂的判断用 `PythonExpression`，例如 `IfCondition(PythonExpression(["'", mode, "' == 'real'"]))`。如果确实需要在 Python 里拿到字符串值（比如根据参数决定 include 哪些文件），用 `OpaqueFunction`，它的回调里可以 `LaunchConfiguration('x').perform(context)`。
+💡 判断"参数等于某个值"用 `EqualsSubstitution`（🔍 Rolling 的 launch 3.10.3 里有），例如 `IfCondition(EqualsSubstitution(mode, 'real'))`。不要用 `PythonExpression` 把参数值拼进表达式：`PythonExpression` 会把拼好的字符串当 Python 代码执行，值里带引号就会出错，也等于允许命令行注入任意 Python 代码。如果确实需要在 Python 里拿到字符串值（比如根据参数决定 include 哪些文件），用 `OpaqueFunction`，它的回调里可以 `LaunchConfiguration('x').perform(context)`。

@@ -27,7 +27,7 @@ launch 是用一个文件（XML、YAML 或 Python）描述"要启动哪些程序
 | YAML | 同上 |
 | Python | 最灵活，可以用 Python 语言和 launch 的底层 API；代价是更长、更复杂 |
 
-📄 三种格式功能等价，可以互相 include。文件名推荐以 `_launch.xml` / `_launch.yaml` / `_launch.py` 结尾；Python 文件**必须以 `launch.py` 结尾**才能被 `ros2 launch` 自动补全。
+📄 三种格式都能完成常见的启动任务（文档用同一个例子对比三种写法），并且可以互相 include。💡 但不是完全等价：事件处理、`OpaqueFunction` 这类需要写逻辑的功能只有 Python 版完整支持（见下表"事件处理"一行）。文件名推荐以 `_launch.xml` / `_launch.yaml` / `_launch.py` 结尾；Python 文件**必须以 `launch.py` 结尾**才能被 `ros2 launch` 自动补全。
 
 ### 核心概念
 
@@ -59,7 +59,7 @@ launch 是用一个文件（XML、YAML 或 Python）描述"要启动哪些程序
   <arg name="enable_lidar" default="true"/>
 
   <group>
-    <push_ros_namespace namespace="$(var robot_ns)"/>   <!-- 必须是组内第一个 -->
+    <push_ros_namespace namespace="$(var robot_ns)"/>   <!-- 放在组内第一个，才能作用到整个组 -->
 
     <node pkg="config_lab" exec="card_parameter_min" name="planner" output="screen">
       <param from="$(find-pkg-share config_lab)/config/planner.yaml"/>

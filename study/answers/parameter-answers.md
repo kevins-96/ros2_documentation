@@ -16,7 +16,7 @@
 
 ## 题 2：两台机器人共用和分别设置的参数
 
-🔍 实测时用练习里的 `planner` 节点代替 `controller`（`/robot1/planner` 和 `/robot2/planner` 同时运行，读取同一个结构完全相同的文件）：
+🔍 实测用的是练习里的 `planner` 节点（`/robot1/planner`、`/robot2/planner` 同时运行），实测文件就是把下面 YAML 里的 `controller` 全部换成 `planner`、`kp` 放在 `controller:` 下。下面按题目写成 `controller`：
 
 ```yaml
 /**/controller:          # 两台共用
