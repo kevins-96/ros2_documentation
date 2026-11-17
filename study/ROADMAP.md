@@ -44,16 +44,24 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 
 `Buffer-Backends/*`（`rosidl::Buffer`、GPU 内存传输）原计划放在本批，读后发现它讲的是消息内存而不是 tf2 缓冲，移到第 4 批"进程内通信与零拷贝"。
 
-## 第 3 批：让节点可配置可启停（配置与启停）
+## 第 3 批：让节点可配置可启停（配置与启停）✅
 
-| 计划卡片 | 源文档 |
+| 卡片 | 吸收的源文档 |
 |---|---|
-| 参数 | `ROS-Framework/About-Parameters.rst`、`parameters/Working-with-parameters.rst`、`Understanding-ROS2-Parameters/*`、`Using-ros2-param.rst`、`Using-Parameters-In-A-Class-CPP.rst`、`Monitoring-For-Parameter-Changes-CPP.rst` |
-| 生命周期节点 | `nodes/Working-with-nodes/Managed-Nodes.rst` |
-| launch 启动系统 | `Developer-Tools/About-Launch.rst`、`Launch/Launch-Main.rst`、`Launch-system.rst`、`Creating-Launch-Files.rst`、`Launch-file-different-formats.rst`、`Using-Substitutions.rst`、`Using-Event-Handlers.rst`、`Using-ROS2-Launch-For-Large-Projects.rst`、`nodes/.../Launching-Multiple-Nodes/*` |
-| 启动参数与重映射 | `Launch/Node-arguments.rst`、`Get-Started/Configuring-ROS2-Environment.rst` |
-| 日志 | `nodes/About-Logging/*`、`Learning-About-Logging/*`、`Using-Rqt-Console/*`、`Developer-Tools/Introspection-and-analysis/Logging-and-logger-configuration.rst` |
-| 节点接口模板（可能并入节点卡片） | `nodes/Working-with-nodes/Using-Node-Interfaces-Template-Class.rst` |
+| ✅ [参数](cards/configuration/parameter.md) | `ROS-Framework/About-Parameters.rst`、`parameters/Working-with-parameters.rst`、`Understanding-ROS2-Parameters/*`、`Using-ros2-param.rst`、`client-libraries/.../Using-Parameters-In-A-Class-CPP.rst`、`Monitoring-For-Parameter-Changes-CPP.rst`、`Launch/Node-arguments.rst`（参数部分） |
+| ✅ [生命周期节点](cards/configuration/lifecycle-node.md) | `nodes/Working-with-nodes/Managed-Nodes.rst`、`About-Nodes.rst`（Lifecycle 段）、`nodes/Working-with-nodes/Using-Node-Interfaces-Template-Class.rst` |
+| ✅ [launch 启动系统](cards/configuration/launch.md) | `Developer-Tools/About-Launch.rst`、`Launch/Launch-Main.rst`、`Launch-system.rst`、`Creating-Launch-Files.rst`、`Launch-file-different-formats.rst`、`Using-Substitutions.rst`、`Using-Event-Handlers.rst`、`Using-ROS2-Launch-For-Large-Projects.rst`、`nodes/.../Launching-Multiple-Nodes/*` |
+| ✅ [启动参数与重映射](cards/configuration/node-arguments.md) | `Launch/Node-arguments.rst`、`Get-Started/Configuring-ROS2-Environment.rst`（source 部分） |
+| ✅ [日志](cards/configuration/logging.md) | `nodes/About-Logging/*`、`Learning-About-Logging/*`、`Using-Rqt-Console/*`、`Developer-Tools/Introspection-and-analysis/Logging-and-logger-configuration.rst`、`Launch/Node-arguments.rst`（日志部分） |
+
+练习：✅ [参数的规则与陷阱](labs/parameter-rules.md)、✅ [生命周期状态切换](labs/lifecycle-transitions.md)、✅ [launch 与名字解析](labs/launch-and-names.md)。代码在 `labs/config_lab/`。
+
+调整说明：
+- 原计划的"节点接口模板"并入[生命周期节点](cards/configuration/lifecycle-node.md)：`NodeInterfaces<>` 的主要用途正是让工具函数同时接受 `rclcpp::Node` 和 `LifecycleNode`。
+- `Configuring-ROS2-Environment.rst` 里 Domain ID、`ROS_AUTOMATIC_DISCOVERY_RANGE` 等发现相关内容放到第 7 批"Domain ID 与发现"。
+- `Managed-Nodes.rst` 只有概述和外链，生命周期卡片的状态机细节来自 `rclcpp_lifecycle` 源码和实测。
+
+本批实测发现的值得注意之处（详见各卡片"常见坑"）：启动时给值不经过参数回调；double 参数启动时传整数会让节点崩溃；`LaunchConfiguration` 在 Python 里不能直接比较；命名空间下 `--log-level` 要写 `命名空间.节点名`；仓库示例 `different_formats_launch.py` 的 `PushROSNamespace` 用了字面量而不是 launch 参数。
 
 ## 第 4 批：让回调按时跑（并发与性能补全）
 
@@ -91,7 +99,7 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 | 计划卡片 | 源文档 |
 |---|---|
 | 中间件 RMW 与 DDS | `ROS-Framework/About-Middleware.rst`、`middleware/About-Middleware-Implementations.rst`、`About-Different-Middleware-Vendors.rst`、`Get-Started/Installation/RMW-Implementations/*`（含 Zenoh） |
-| Domain ID 与发现 | `nodes/About-Domain-ID.rst`、`Launch/Improved-Dynamic-Discovery.rst`、`Launch/Discovery-Server/*` |
+| Domain ID 与发现 | `nodes/About-Domain-ID.rst`、`Get-Started/Configuring-ROS2-Environment.rst`（Domain ID 与发现部分，从第 3 批移来）、`Launch/Improved-Dynamic-Discovery.rst`、`Launch/Discovery-Server/*` |
 | DDS 调优 | `Developer-Tools/Build/DDS-tuning.rst`、`Launch/FastDDS-Configuration.rst` |
 | Docker 部署 | `Build/Run-2-nodes-in-single-or-separate-docker-containers.rst`、`Setup-ROS-2-with-VSCode-and-Docker-Container.rst`、`Deployment-Guidelines/*`、`Build/About-Cross-Compilation.rst`、`Cross-compilation.rst` |
 | 安全 SROS2 | `Launch/Security/*`、`Build/The-Keystore.rst` |

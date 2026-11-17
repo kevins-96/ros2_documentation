@@ -1,0 +1,6 @@
+<launch>
+  <!-- 生命周期节点：autostart=true 时 launch 会自动 configure + activate -->
+  <arg name="autostart" default="true"/>
+  <lifecycle_node pkg="config_lab" exec="card_lifecycle_min" name="lidar_driver"
+                  namespace="" autostart="$(var autostart)" output="screen"/>
+</launch>

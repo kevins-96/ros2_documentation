@@ -1,0 +1,24 @@
+<launch>
+  <!-- 启动参数：ros2 launch config_lab bringup_launch.xml robot_ns:=robot2 enable_lidar:=false -->
+  <arg name="robot_ns" default="robot1"/>
+  <arg name="use_sim_time" default="false"/>
+  <arg name="enable_lidar" default="true"/>
+  <arg name="log_level" default="info"/>
+
+  <group>
+    <!-- 必须放在组内第一个，后面的节点和 include 才会继承这个命名空间 -->
+    <push_ros_namespace namespace="$(var robot_ns)"/>
+
+    <node pkg="config_lab" exec="card_parameter_min" name="planner" output="screen"
+          ros_args="--log-level $(var log_level)">
+      <param from="$(find-pkg-share config_lab)/config/planner.yaml"/>
+      <param name="use_sim_time" value="$(var use_sim_time)"/>
+    </node>
+
+    <node pkg="config_lab" exec="name_lab" name="lidar" args="--spin" output="screen">
+      <remap from="scan" to="scan_front"/>
+    </node>
+
+    <include file="$(find-pkg-share config_lab)/launch/lidar_launch.xml" if="$(var enable_lidar)"/>
+  </group>
+</launch>

@@ -21,11 +21,11 @@ mindmap
       ✅ 四元数
       ✅ URDF 与机器人模型
     让节点可配置可启停
-      参数
-      生命周期节点
-      launch 启动系统
-      启动参数与重映射
-      日志
+      ✅ 参数
+      ✅ 生命周期节点
+      ✅ launch 启动系统
+      ✅ 启动参数与重映射
+      ✅ 日志
     让回调按时跑
       ✅ 执行器
       ✅ 回调组
@@ -70,7 +70,12 @@ Mermaid 节点在 Obsidian 和 VS Code 里都不能稳定地点击跳转，导�
   - [tf2 与时间](../cards/coordinates/tf2-time.md) · 练习：[lookupTransform 的时间参数](../labs/tf-time-lookup.md)
   - [四元数 Quaternion](../cards/coordinates/quaternion.md) · 练习：[四元数与 tf2 缓冲](../labs/quaternion-buffer.md)
   - [URDF 与机器人模型](../cards/coordinates/urdf.md) · 练习：[URDF 关节与 TF](../labs/urdf-joint-states.md)
-- **让节点可配置可启停：配置与启停**（第 3 批，待建）
+- **让节点可配置可启停：配置与启停**（第 3 批）
+  - [参数 Parameter](../cards/configuration/parameter.md) · 练习：[参数的规则与陷阱](../labs/parameter-rules.md)
+  - [生命周期节点 Lifecycle Node](../cards/configuration/lifecycle-node.md) · 练习：[生命周期状态切换](../labs/lifecycle-transitions.md)
+  - [启动参数与重映射](../cards/configuration/node-arguments.md)
+  - [launch 启动系统](../cards/configuration/launch.md) · 练习：[launch 与名字解析](../labs/launch-and-names.md)
+  - [日志 Logging](../cards/configuration/logging.md)
 - **让回调按时跑：并发与实时性**（样板 + 第 4 批）
   - [执行器 Executor](../cards/concurrency/executor.md)
   - [回调组 Callback Group](../cards/concurrency/callback-group.md)
