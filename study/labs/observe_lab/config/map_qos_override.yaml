@@ -1,0 +1,6 @@
+# 练习「rosbag」：录制和回放时对 /map 显式指定 QoS
+/map:
+  durability: transient_local
+  reliability: reliable
+  history: keep_last
+  depth: 1

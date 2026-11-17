@@ -100,16 +100,28 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 
 本批实测发现的值得注意之处（详见各卡片"常见坑"）：Rolling 已删除 `ament_target_dependencies`；`colcon test` 有失败时退出码仍为 0，`colcon test-result` 会读到旧的 XML；在 source 了某个工作空间的终端里编译，会把它永久写进新工作空间的 `setup.bash`；pluginlib 6.0.3 写了 `name` 后不能再用 `type` 查找（与文档说法不符），`ros2 plugin list` 正常不代表能加载；`add_library` 不写 `SHARED` 时库类型取决于是否 `find_package(rclcpp)`；镜像里 cppcheck 2.19 被静默跳过；离线时 xmllint 校验 `package.xml` 失败；`rosdep --ignore-src` 会把 underlay 中已有的包视为"有源码"。
 
-## 第 6 批：看见系统在干什么（调试与观测）
+## 第 6 批：看见系统在干什么（调试与观测）✅
 
-| 计划卡片 | 源文档 |
+| 卡片 | 吸收的源文档 |
 |---|---|
-| 命令行工具 | `Introspection-and-analysis/About-Command-Line-Tools.rst`、`Getting-Started-With-Ros2doctor.rst`、`Publishing-Messages-Using-YAML-Files.rst`、`Examine-Traffic.rst` |
-| rosbag 录制回放 | `Recording-And-Playing-Back-Data/*`、`Recording-A-Bag-From-Your-Own-Node-CPP.rst`、`Reading-From-A-Bag-File-CPP.rst`、`Testing/Overriding-QoS-Policies-For-Recording-And-Playback.rst` |
-| 服务与动作内省 | `Introspection-and-analysis/Service-Introspection.rst`、`actions/Working-with-actions/Action-Introspection.rst` |
-| 调试与回溯 | `Developer-Tools/About-Debugging.rst`、`Debugging/Getting-Backtraces-in-ROS-2.rst`、`Debugging/ROS-2-IDEs.rst` |
-| tracing 性能追踪 | `About-introspection-and-analysis.rst`、`Tracing/ROS2-Tracing-Trace-and-Analyze.rst`、`Debugging/Building-ROS-2-with-Tracing.rst` |
-| RViz 与可视化 | `About-visualization.rst`、`Visualization/RViz/*`（用户指南、Marker 三篇；自定义 Display/Panel 按需）、`About-RQt.rst` |
+| ✅ [命令行工具](cards/observability/cli-tools.md) | `Developer-Tools/Introspection-and-analysis/About-Command-Line-Tools.rst`、`client-libraries/Working-with-Client-Libraries/Getting-Started-With-Ros2doctor.rst`、`Introspection-and-analysis/Publishing-Messages-Using-YAML-Files.rst` |
+| ✅ [rosbag 录制回放](cards/observability/rosbag.md) | `interfaces/Working-with-interfaces/Recording-And-Playing-Back-Data/*`、`client-libraries/Working-with-Client-Libraries/Recording-A-Bag-From-Your-Own-Node-CPP.rst`、`Reading-From-A-Bag-File-CPP.rst`、`Developer-Tools/Debugging/Testing/Overriding-QoS-Policies-For-Recording-And-Playback.rst` |
+| ✅ [服务与动作内省](cards/observability/service-introspection.md) | `Introspection-and-analysis/Service-Introspection.rst`、`interfaces/actions/Working-with-actions/Action-Introspection.rst` |
+| ✅ [调试与回溯](cards/observability/gdb-debugging.md) | `Developer-Tools/About-Debugging.rst`、`Debugging/Getting-Backtraces-in-ROS-2.rst`、`Debugging/ROS-2-IDEs.rst` |
+| ✅ [tracing 性能追踪](cards/observability/tracing.md) | `Developer-Tools/About-introspection-and-analysis.rst`、`Introspection-and-analysis/Tracing/ROS2-Tracing-Trace-and-Analyze.rst`、`Debugging/Building-ROS-2-with-Tracing.rst` |
+| ✅ [RViz 与可视化](cards/observability/rviz.md) | `Developer-Tools/About-visualization.rst`、`Visualization/RViz/RViz-Main.rst`、`RViz-User-Guide/*`、`Marker-Display-types/*`、`Marker-Sending-Basic-Shapes/*`、`Marker-Points-and-Lines/*`、`Visualization/About-RQt.rst` |
+
+练习：✅ [命令行与服务内省](labs/cli-and-introspection.md)、✅ [录制、回放与离线分析](labs/bag-record-replay.md)、✅ [崩溃回溯与回调追踪](labs/crash-and-trace.md)。代码在 `labs/observe_lab/`。
+
+调整说明：
+- 原计划放在"命令行工具"的 `Examine-Traffic.rst` 读后发现讲的是用 tcpdump 对比开启 SROS2 前后的网络流量（看数据是否加密），移到第 7 批"安全 SROS2"。
+- 服务内省原计划只是"命令行工具"的一部分，内容较多（三种状态、四种事件、录制服务和动作），单独成卡。
+- `RViz-Custom-Display/*`、`RViz-Custom-Panel/*`（写 RViz 插件）没有收，需要时再补；`Rqtbag/Create-An-Rqtbag-Plugin.rst` 维持"有意不收"。
+- tracing 部分：容器里 ROS apt 源不可用，没能安装 `ros2trace` 和 `tracetools_analysis`，改用 `lttng` 命令 + `babeltrace2` + 自写的 [callback_durations.py](labs/observe_lab/scripts/callback_durations.py) 实测；`ros2 trace` 的用法按文档标 📄。
+- RViz 部分：镜像没有图形界面，RViz 操作按文档标 📄，Marker 字段默认值和 tf2 对 frame 名的检查在容器里实测。
+- `Debugging-Tf2-Problems/*` 已在第 2 批收进 tf2 卡片；`Logging-and-logger-configuration.rst` 已在第 3 批收进日志卡片。
+
+本批实测发现的值得注意之处（详见各卡片"常见坑"）：Rolling 的 `ros2 bag record` 必须写 `--topics`，位置参数会报错；`create_subscription<rclcpp::SerializedMessage>` 编译通过但运行时抛异常；进程崩溃时 bag 没有 `metadata.yaml`；文档 YAML 发布示例的输出顺序（1、3、2）是笔误；Rolling 的 rmw_fastrtps 会多出 `<话题>/_buf_cpu` 隐藏话题；gdb 批处理模式会把崩溃的退出码变成 0；不设 `CMAKE_BUILD_TYPE` 没有行号，Release 下出错的小函数会被内联消失；定时器回调超过周期时不补发、频率悄悄下降；`Marker` 默认 alpha 为 0；tf2 拒绝以 `/` 开头的 frame 名，而文档的 Marker 示例写的是 `"/my_frame"`。
 
 ## 第 7 批：让多台机器连起来（中间件与部署）
 
@@ -119,7 +131,7 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 | Domain ID 与发现 | `nodes/About-Domain-ID.rst`、`Get-Started/Configuring-ROS2-Environment.rst`（Domain ID 与发现部分，从第 3 批移来）、`Launch/Improved-Dynamic-Discovery.rst`、`Launch/Discovery-Server/*` |
 | DDS 调优 | `Developer-Tools/Build/DDS-tuning.rst`、`Launch/FastDDS-Configuration.rst` |
 | Docker 部署 | `Build/Run-2-nodes-in-single-or-separate-docker-containers.rst`、`Setup-ROS-2-with-VSCode-and-Docker-Container.rst`、`Deployment-Guidelines/*`、`Build/About-Cross-Compilation.rst`、`Cross-compilation.rst` |
-| 安全 SROS2 | `Launch/Security/*`、`Build/The-Keystore.rst` |
+| 安全 SROS2 | `Launch/Security/*`、`Build/The-Keystore.rst`、`Introspection-and-analysis/Examine-Traffic.rst`（从第 6 批移来） |
 
 ## 有意不收（需要时告诉我再补）
 

@@ -144,7 +144,7 @@ my_node:
 - [话题](topic.md)：QoS 最常用在话题上；服务、动作底层也有 QoS
 - [节点](node.md)：被发现 ≠ 能通信，QoS 兼容是单独检查的
 - 参数（第 3 批）：QoS overrides 是基于参数的
-- rosbag（第 6 批）：录制和回放时也要处理 QoS（文档有专门一篇 Overriding-QoS-Policies-For-Recording-And-Playback）
+- [rosbag 录制回放](../observability/rosbag.md)：rosbag 会自动适配发布者 QoS，transient local 话题录制前发出的消息也能录到；特殊情况用 `--qos-profile-overrides-path`
 - 练习：[QoS 不匹配时到底发生了什么](../../labs/qos-mismatch.md)
 - 上一级：[总览脑图](../../map/overview.md)
 

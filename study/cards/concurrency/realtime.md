@@ -121,7 +121,7 @@ void run_control_loop(std::atomic<bool> & running, long period_ns)
 - [回调组](callback-group.md)：把实时相关的回调和普通回调分开
 - [进程内通信与零拷贝](intra-process.md)：减少复制和分配；自定义分配器要在创建节点时就开进程内通信
 - [组件与组合](component.md)：多个节点放进同一进程
-- tracing 性能追踪（第 6 批）：用 ros2_tracing 找延迟来源
+- [tracing 性能追踪](../observability/tracing.md)：用 ros2_tracing 找延迟来源；回调超过周期时定时器不补发
 - 练习：[实时循环的抖动](../../labs/realtime-jitter.md)
 - 上一级：[总览脑图](../../map/overview.md)
 
