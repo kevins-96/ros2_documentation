@@ -1,0 +1,15 @@
+<launch>
+  <arg name="ipc" default="true" description="组件之间是否使用进程内通信"/>
+  <arg name="bytes" default="4000000" description="每帧点云字节数"/>
+
+  <!-- 一个容器进程里放两个组件 -->
+  <node_container pkg="rclcpp_components" exec="component_container" name="lidar_container" namespace="" output="screen">
+    <composable_node pkg="perf_lab" plugin="perf_lab::FakeLidar" name="fake_lidar">
+      <param name="bytes" value="$(var bytes)"/>
+      <extra_arg name="use_intra_process_comms" value="$(var ipc)"/>
+    </composable_node>
+    <composable_node pkg="perf_lab" plugin="perf_lab::CloudFilter" name="cloud_filter">
+      <extra_arg name="use_intra_process_comms" value="$(var ipc)"/>
+    </composable_node>
+  </node_container>
+</launch>

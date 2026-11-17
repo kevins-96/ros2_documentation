@@ -131,7 +131,7 @@ ros2 launch ./some_launch.py                                    # 也可以直�
 - [启动参数与重映射](node-arguments.md)：launch 最终都翻译成 `--ros-args` 命令行，日志里能看到完整命令
 - [生命周期节点](lifecycle-node.md)：`lifecycle_node` + `autostart`
 - [URDF 与机器人模型](../coordinates/urdf.md)：`Command(['xacro ', path])` 生成 `robot_description`
-- 组件与组合（第 4 批）：`ComposableNodeContainer`
+- [组件与组合](../concurrency/component.md)：`node_container`、`composable_node`、`load_composable_node`
 - 练习：[launch 与名字解析](../../labs/launch-and-names.md)
 - 上一级：[总览脑图](../../map/overview.md)
 
