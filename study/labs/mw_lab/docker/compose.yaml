@@ -1,0 +1,23 @@
+# 两个容器都用宿主机网络（network_mode: host），但默认各有各的 /dev/shm。
+# Fast DDS 发现对方"在同一台机器上"，就走共享内存，结果谁也收不到谁。
+# 三种改法任选其一（练习第 4 部分逐个验证）：
+#   1. 两个服务都加 ipc: host（共享 /dev/shm）
+#   2. 两个服务都设 FASTDDS_BUILTIN_TRANSPORTS=UDPv4（不用共享内存）
+#   3. 不用 host 网络，改用默认的 bridge 网络（删掉 network_mode）
+services:
+  pub:
+    image: ros:rolling-ros-base
+    network_mode: host
+    # ipc: host
+    environment:
+      - ROS_DOMAIN_ID=42
+      # - FASTDDS_BUILTIN_TRANSPORTS=UDPv4
+    command: ["ros2", "topic", "pub", "-r", "5", "/probe", "std_msgs/msg/String", "{data: from-pub-container}"]
+  sub:
+    image: ros:rolling-ros-base
+    network_mode: host
+    # ipc: host
+    environment:
+      - ROS_DOMAIN_ID=42
+      # - FASTDDS_BUILTIN_TRANSPORTS=UDPv4
+    command: ["ros2", "topic", "echo", "/probe", "std_msgs/msg/String", "--field", "data"]

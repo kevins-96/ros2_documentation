@@ -27,7 +27,8 @@ study/
 │   ├── configuration/   让节点可配置可启停
 │   ├── concurrency/     让回调按时跑
 │   ├── engineering/     把代码变成能交付的包
-│   └── observability/   看见系统在干什么
+│   ├── observability/   看见系统在干什么
+│   └── middleware/      让多台机器连起来
 ├── answers/             自测题答案（xxx-answers.md）
 └── labs/
     ├── *.md             练习说明
@@ -38,6 +39,7 @@ study/
     ├── perf_lab/          组件、进程内通信、借用消息、实时循环练习
     ├── build_lab/         工程化练习：path_smoother_core（库、插件基类、节点、测试）+ path_smoother_plugins（插件）
     ├── observe_lab/       调试与观测练习：fake_planner（被观察的假规划器）、bag 读写、图查询、回调时长统计脚本
+    ├── mw_lab/            中间件与部署练习：mw_probe（连通性探针）、序列化基准、Fast DDS XML、SROS2 策略、compose 文件
     └── executor_lab/      执行器练习与卡片示例代码
 ```
 
@@ -65,7 +67,8 @@ mkdir -p ~/study_ws/src
 ln -s <你的仓库路径>/study/labs/study_interfaces <你的仓库路径>/study/labs/comm_lab \
       <你的仓库路径>/study/labs/executor_lab <你的仓库路径>/study/labs/tf_lab \
       <你的仓库路径>/study/labs/config_lab <你的仓库路径>/study/labs/perf_lab \
-      <你的仓库路径>/study/labs/build_lab <你的仓库路径>/study/labs/observe_lab ~/study_ws/src/
+      <你的仓库路径>/study/labs/build_lab <你的仓库路径>/study/labs/observe_lab \
+      <你的仓库路径>/study/labs/mw_lab ~/study_ws/src/
 cd ~/study_ws && source /opt/ros/rolling/setup.bash
 colcon build && source install/setup.bash
 ```
@@ -82,7 +85,8 @@ colcon build && source install/setup.bash
 4. **并发与实时性**：[执行器](cards/concurrency/executor.md) → [回调组](cards/concurrency/callback-group.md)（练习：[控制环为什么被卡住](labs/executor-blocking.md)）→ [组件与组合](cards/concurrency/component.md)（练习：[组件与容器](labs/component-container.md)）→ [进程内通信与零拷贝](cards/concurrency/intra-process.md)（练习：[进程内通信与零拷贝](labs/intra-process-zero-copy.md)）→ [实时编程](cards/concurrency/realtime.md)（练习：[实时循环的抖动](labs/realtime-jitter.md)）
 5. **工程化**：[工作空间与 colcon](cards/engineering/workspace-colcon.md) → [ament_cmake](cards/engineering/ament-cmake.md) → [rosdep 依赖管理](cards/engineering/rosdep.md)（练习：[编译与依赖的常见错误](labs/build-pitfalls.md)）→ [pluginlib 插件](cards/engineering/pluginlib.md)（练习：[用插件换路径平滑器](labs/plugin-smoother.md)）→ [测试](cards/engineering/testing.md)（练习：[测试与代码规范检查](labs/testing-and-lint.md)）
 6. **调试与观测**：[命令行工具](cards/observability/cli-tools.md) → [服务与动作内省](cards/observability/service-introspection.md)（练习：[命令行与服务内省](labs/cli-and-introspection.md)）→ [rosbag 录制回放](cards/observability/rosbag.md) → [RViz 与可视化](cards/observability/rviz.md)（练习：[录制、回放与离线分析](labs/bag-record-replay.md)）→ [调试与回溯](cards/observability/gdb-debugging.md) → [tracing 性能追踪](cards/observability/tracing.md)（练习：[崩溃回溯与回调追踪](labs/crash-and-trace.md)）
-7. 之后的主题按 [路线图](ROADMAP.md) 补齐
+7. **中间件与部署**：[中间件 RMW 与 DDS](cards/middleware/rmw-dds.md) → [Domain ID 与发现](cards/middleware/domain-discovery.md)（练习：[中间件、Domain 与发现](labs/middleware-discovery.md)）→ [DDS 调优与 Fast DDS XML](cards/middleware/dds-tuning.md) → [Docker 部署](cards/middleware/docker-deploy.md)（练习：[DDS 调优、XML 配置与容器网络](labs/dds-and-docker.md)）→ [安全 SROS2](cards/middleware/sros2-security.md)（练习：[SROS2 密钥库、强制模式与访问控制](labs/sros2-keystore.md)）
+8. 计划中的七批已全部完成；[路线图](ROADMAP.md)末尾列出了有意不收的文档，需要时再补
 
 ## 约定
 

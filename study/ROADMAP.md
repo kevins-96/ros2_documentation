@@ -123,15 +123,25 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 
 本批实测发现的值得注意之处（详见各卡片"常见坑"）：Rolling 的 `ros2 bag record` 必须写 `--topics`，位置参数会报错；`create_subscription<rclcpp::SerializedMessage>` 编译通过但运行时抛异常；进程崩溃时 bag 没有 `metadata.yaml`；文档 YAML 发布示例的输出顺序（1、3、2）是笔误；Rolling 的 rmw_fastrtps 会多出 `<话题>/_buf_cpu` 隐藏话题；gdb 批处理模式会把崩溃的退出码变成 0；不设 `CMAKE_BUILD_TYPE` 没有行号，Release 下出错的小函数会被内联消失；定时器回调超过周期时不补发、频率悄悄下降；`Marker` 默认 alpha 为 0；tf2 拒绝以 `/` 开头的 frame 名，而文档的 Marker 示例写的是 `"/my_frame"`。
 
-## 第 7 批：让多台机器连起来（中间件与部署）
+## 第 7 批：让多台机器连起来（中间件与部署）✅
 
-| 计划卡片 | 源文档 |
+| 卡片 | 吸收的源文档 |
 |---|---|
-| 中间件 RMW 与 DDS | `ROS-Framework/About-Middleware.rst`、`middleware/About-Middleware-Implementations.rst`、`About-Different-Middleware-Vendors.rst`、`Get-Started/Installation/RMW-Implementations/*`（含 Zenoh） |
-| Domain ID 与发现 | `nodes/About-Domain-ID.rst`、`Get-Started/Configuring-ROS2-Environment.rst`（Domain ID 与发现部分，从第 3 批移来）、`Launch/Improved-Dynamic-Discovery.rst`、`Launch/Discovery-Server/*` |
-| DDS 调优 | `Developer-Tools/Build/DDS-tuning.rst`、`Launch/FastDDS-Configuration.rst` |
-| Docker 部署 | `Build/Run-2-nodes-in-single-or-separate-docker-containers.rst`、`Setup-ROS-2-with-VSCode-and-Docker-Container.rst`、`Deployment-Guidelines/*`、`Build/About-Cross-Compilation.rst`、`Cross-compilation.rst` |
-| 安全 SROS2 | `Launch/Security/*`、`Build/The-Keystore.rst`、`Introspection-and-analysis/Examine-Traffic.rst`（从第 6 批移来） |
+| ✅ [中间件 RMW 与 DDS](cards/middleware/rmw-dds.md) | `ROS-Framework/About-Middleware.rst`、`middleware/About-Middleware-Implementations.rst`、`About-Different-Middleware-Vendors.rst`、`Get-Started/Installation/RMW-Implementations/*`（含 Zenoh）、`Get-Started/Installation/RMW-Implementations/Working-with-multiple-RMW-implementations.rst` |
+| ✅ [Domain ID 与发现](cards/middleware/domain-discovery.md) | `nodes/About-Domain-ID.rst`、`Get-Started/Configuring-ROS2-Environment.rst`（Domain ID 与发现部分，从第 3 批移来）、`Launch/Improved-Dynamic-Discovery.rst`、`Launch/Discovery-Server/*` |
+| ✅ [DDS 调优与 Fast DDS XML](cards/middleware/dds-tuning.md) | `Developer-Tools/Build/DDS-tuning.rst`、`Launch/FastDDS-Configuration.rst` |
+| ✅ [Docker 部署](cards/middleware/docker-deploy.md) | `Build/Run-2-nodes-in-single-or-separate-docker-containers.rst`、`Setup-ROS-2-with-VSCode-and-Docker-Container.rst`、`Deployment-Guidelines/*`、`Build/About-Cross-Compilation.rst`、`Cross-compilation.rst` |
+| ✅ [安全 SROS2](cards/middleware/sros2-security.md) | `Launch/Security/*`、`Build/The-Keystore.rst`、`Introspection-and-analysis/Examine-Traffic.rst`（从第 6 批移来） |
+
+练习：✅ [中间件、Domain 与发现](labs/middleware-discovery.md)、✅ [DDS 调优、XML 配置与容器网络](labs/dds-and-docker.md)、✅ [SROS2 密钥库、强制模式与访问控制](labs/sros2-keystore.md)。代码和配置在 `labs/mw_lab/`。
+
+调整说明：
+- 计划中的"DDS 调优"扩成"DDS 调优与 Fast DDS XML"：Fast DDS 的 XML profile（发布模式、分区、匹配数上限）和内核参数放在一起讲。Discovery Server 和 Super Client 的 XML 放在"Domain ID 与发现"。
+- 镜像里只有 `rmw_fastrtps_cpp`，ROS apt 源在容器里不可用，Cyclone DDS、Connext、Zenoh 没有实测，按文档标 📄；Zenoh 路由器的可执行文件名、环境变量名对照 `rmw_zenoh` 源码核实。
+- 交叉编译两篇文档内容很少（`Cross-compilation.rst` 正文为空），并入 Docker 部署卡片的一小节。
+- 多台机器用两个 Docker 容器（同一个 bridge 网络）模拟；SROS2 的抓包在 `lo` 上用 `tcpdump` 做。
+
+本批实测发现的值得注意之处（详见各卡片"常见坑"）：两个 `network_mode: host` 的容器默认互相收不到（Fast DDS 走共享内存而 `/dev/shm` 不共享），没有任何报错；`ros2 daemon` 只按 Domain ID 和 RMW 区分，后来改的 `ROS_DISCOVERY_SERVER` 等变量它看不到；文档的 Super Client XML 在 Fast DDS 3 里解析失败并被整个忽略，`fastdds discovery -i` 已弃用；Fast DDS XML 教程对默认发布模式的说法自相矛盾，源码是同步；XML profile 名必须带 `/`，分区和匹配数上限在 CLI 里看不出来，匹配数上限时被拒的订阅端仍报告 `matched=1`；`nav_msgs/Path` 序列化比同样字节数的 `PointCloud2` 慢约 50 倍；`ipfrag_high_thresh` 新内核默认 4 MB 而不是文档说的 256 KB；SROS2 不设 `Enforce` 时配错会悄悄降级，permissions 绑定创建时的 Domain ID，改名或重映射会被访问控制在启动时拒绝，加密后 enclave 名字仍是明文；容器里 root 生成的私钥权限是 `666`；部署教程的 Dockerfile 下载链接 404、默认 `humble`，预期输出里 talker/listener 写反；安全教程的 `zenohd` 应为 `rmw_zenohd`。
 
 ## 有意不收（需要时告诉我再补）
 

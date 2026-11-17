@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 订阅端：/probe 话题的 DataReader 放进分区 part2。
+     profile_name 必须是完整的 ROS 话题名（带开头的 /），rmw_fastrtps 用它来查找 profile。 -->
+<profiles xmlns="http://www.eprosima.com">
+  <subscriber profile_name="/probe">
+    <qos>
+      <partition>
+        <names>
+          <name>part2</name>
+        </names>
+      </partition>
+    </qos>
+  </subscriber>
+</profiles>

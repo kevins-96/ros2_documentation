@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 访问控制策略：/lab/probe_pub 里的 mw_probe 只能发布 probe，/lab/probe_sub 里的只能订阅 probe。
+     这里写 ROS 名字，ros2 security create_permission 会翻译成 DDS 名字（rt/probe、rq/.../rr/... 等）。
+     公共部分照抄 sros2 仓库 test/policies/common/node/*.xml，展开写在这里以免依赖 XInclude 路径。 -->
+<policy version="0.2.0">
+  <enclaves>
+    <enclave path="/lab/probe_pub">
+      <profiles>
+        <profile ns="/" node="mw_probe">
+          <!-- 每个节点都需要的：日志、参数事件、时钟、参数服务、类型描述服务 -->
+          <topics publish="ALLOW">
+            <topic>rosout</topic>
+          </topics>
+          <topics publish="ALLOW" subscribe="ALLOW">
+            <topic>/parameter_events</topic>
+          </topics>
+          <topics subscribe="ALLOW">
+            <topic>/clock</topic>
+          </topics>
+          <services reply="ALLOW" request="ALLOW">
+            <service>~/describe_parameters</service>
+            <service>~/get_parameter_types</service>
+            <service>~/get_parameters</service>
+            <service>~/list_parameters</service>
+            <service>~/set_parameters</service>
+            <service>~/set_parameters_atomically</service>
+            <service>~/get_type_description</service>
+          </services>
+          <!-- 本节点自己的话题 -->
+          <topics publish="ALLOW">
+            <topic>probe</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+    <enclave path="/lab/probe_sub">
+      <profiles>
+        <profile ns="/" node="mw_probe">
+          <!-- 每个节点都需要的：日志、参数事件、时钟、参数服务、类型描述服务 -->
+          <topics publish="ALLOW">
+            <topic>rosout</topic>
+          </topics>
+          <topics publish="ALLOW" subscribe="ALLOW">
+            <topic>/parameter_events</topic>
+          </topics>
+          <topics subscribe="ALLOW">
+            <topic>/clock</topic>
+          </topics>
+          <services reply="ALLOW" request="ALLOW">
+            <service>~/describe_parameters</service>
+            <service>~/get_parameter_types</service>
+            <service>~/get_parameters</service>
+            <service>~/list_parameters</service>
+            <service>~/set_parameters</service>
+            <service>~/set_parameters_atomically</service>
+            <service>~/get_type_description</service>
+          </services>
+          <!-- 本节点自己的话题 -->
+          <topics subscribe="ALLOW">
+            <topic>probe</topic>
+          </topics>
+        </profile>
+      </profiles>
+    </enclave>
+  </enclaves>
+</policy>
