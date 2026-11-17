@@ -122,7 +122,7 @@ ros2 run tf2_ros tf2_monitor odom laser    # 每条链的延迟、发布频率
 2. **`tf2_echo` 的参数顺序。** 文档写作 `tf2_echo [source_frame] [target_frame]`📄，但 🔍 实测 `static_transform_publisher --x 1 --yaw 1.5708 --frame-id world --child-frame-id a` 后，`tf2_echo world a` 打印 Translation `[1, 0, 0]`、yaw 90°，即 **a 在 world 里的位姿**；`tf2_echo a world` 打印 `[0, 1, 0]`、yaw -90°，报错信息也写着 `"a" passed to canTransform argument target_frame`。所以 `tf2_echo X Y` 等价于 `lookupTransform(X, Y)`：**第一个参数是参考系（target）**。看名字会搞反，按"在 X 里看 Y"记。
 3. **启动后最初几次查询失败。** 🔍 监听节点刚启动时 buffer 是空的，第一次查询报 `"odom" passed to lookupTransform argument target_frame does not exist`，0.5 s 后就正常了。💡 导航节点启动阶段要容忍这类异常（打日志、跳过本周期），不要直接退出；或者启动时用带超时的 `canTransform` 等待。
 4. **一个坐标系两个父。** 📄 tf2 不允许。💡 典型错误：定位节点直接发布 `map → base_link`，同时里程计发布 `odom → base_link`。正确做法是定位节点算出 `map → odom` 再发布。
-5. **动态变换用了静态广播器，或反过来。** 📄 静态变换不存历史；💡 用静态广播器发会变的位姿，监听者只会看到最后一次的值且没有时间插值。反过来用动态广播器发安装位置，则必须持续发布：一旦停发，按消息时间戳或 `now()` 查询都会报"外推到未来"（extrapolation into the future）。
+5. **动态变换用了静态广播器，或反过来。** 📄 静态变换不存历史；💡 用静态广播器发会变的位姿，监听者只会看到最后一次的值且没有时间插值。反过来用动态广播器发安装位置，则必须持续发布：一旦停发，查询停发之后的时刻（新到消息的时间戳或 `now()`）都会报"外推到未来"（extrapolation into the future）；停发之前、仍在缓存时间窗内的时刻还能查到，`TimePointZero` 也仍返回最后一次的值，所以这种错误不一定立刻暴露。
 6. **四元数全 0。** 🔍 `rotation` 默认构造是 `(0,0,0,0)`。tf2 收到后报 `TF_DENORMALIZED_QUATERNION ... Ignoring transform`，**这条变换被丢弃**（实测见[四元数](quaternion.md)卡片）。没有旋转也要写 `rotation.w = 1.0`。
 7. **自己手算 "frame 位姿" 和 "data 变换" 时方向搞反。** 📄 二者互为逆。💡 尽量只用 `transform()`，让 tf2 处理方向。
 

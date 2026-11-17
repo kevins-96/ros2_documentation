@@ -103,7 +103,7 @@ void on_point(const PointStamped::ConstSharedPtr & msg)
 
 1. **用 `now()` 不带超时。** 📄 必然外推失败，🔍 实测 79 次 0 成功。改法：要最新就用 `TimePointZero`，要指定时刻就加超时。📄 调试教程里"`now() - 0.1 s`"只是为了定位问题，不是正确修法。
 2. **在同一个单线程执行器里，自己广播、自己带超时等待。** 🔍 练习 `self-broadcast` 情形：节点用 20 Hz 定时器广播 `odom → self`，另一个定时器用 `now()` + 50 ms 查询，**8 s 内 0 次成功**。等待期间执行器被阻塞，广播定时器跑不了，等的数据永远不会来。🔍 `buffer.hpp` 里也有对应提示：没有专门线程填充数据时，带超时的 `canTransform/lookupTransform` "will always timeout"。💡 和[执行器](../concurrency/executor.md)卡片的"控制环被卡住"是同一个问题。
-3. **超时也会拖慢控制环。** 🔍 `now()` + 50 ms 每次都阻塞约 50 ms。💡 在 20 Hz 控制环（周期 50 ms）里这么写，控制周期直接翻倍。控制环里优先用 `TimePointZero`，或把等待放到别的回调组。
+3. **超时也会拖慢控制环。** 🔍 `now()` + 50 ms 每次都阻塞约 50 ms。💡 在 20 Hz 控制环（周期 50 ms）里这么写，控制周期直接翻倍。控制环里优先用 `TimePointZero`；如果必须等待，把等待放到单独的回调组**并且**用多线程执行器（`MultiThreadedExecutor`）。只分回调组、仍用单线程执行器，等待照样会占住唯一的线程（见[回调组](../concurrency/callback-group.md)）。
 4. **查的时刻超出缓存。** 📄 默认存 10 s。🔍 `now() - 15 s` 实测全部失败（外推到过去）。`now() - 5 s` 在启动后前 5 s 也会失败（buffer 里还没有那么久的数据），实测 5.1 s 后首次成功。
 5. **MessageFilter 教程代码在 Rolling 上编译不过。** 🔍 仓库教程有三处与 Rolling API 不符（tf2_ros 0.46.5、message_filters 8.0.5 实测）：
    - `point_sub_.subscribe(this, "topic")` 缺 QoS 参数，Rolling 要求 `subscribe(node, topic, rclcpp::QoS)`，`rmw_qos_profile_t` 也不再接受；
