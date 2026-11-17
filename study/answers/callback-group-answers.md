@@ -1,6 +1,6 @@
 # 答案：回调组 Callback Group
 
-> 先在[卡片](../cards/callback-group.md)里自己写下答案再来对照。
+> 先在[卡片](../cards/concurrency/callback-group.md)里自己写下答案再来对照。
 
 ## 题 1：控制定时器与里程计订阅共享 `latest_odom_`
 

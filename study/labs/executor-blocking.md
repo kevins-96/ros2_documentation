@@ -1,6 +1,6 @@
 # 练习：控制环为什么被卡住？
 
-> 适用：ROS 2 **Rolling**。对应卡片：[执行器](../cards/executor.md)、[回调组](../cards/callback-group.md)
+> 适用：ROS 2 **Rolling**。对应卡片：[执行器](../cards/concurrency/executor.md)、[回调组](../cards/concurrency/callback-group.md)
 > 代码：[executor_lab](executor_lab/)（一个 ament_cmake 包，含实验 A、实验 B 和两张卡片的最小示例）
 > 用时：约 30 分钟
 

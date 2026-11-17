@@ -1,0 +1,6 @@
+# 请求：起点和终点；响应：是否成功 + 路径
+Pose2D start
+Pose2D goal
+---
+bool success
+Pose2D[] path
