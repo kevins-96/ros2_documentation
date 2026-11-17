@@ -1,0 +1,7 @@
+<launch>
+  <arg name="plugin" default="moving_average"/>
+  <node pkg="path_smoother_core" exec="smoother_node" name="smoother_node" output="screen">
+    <param from="$(find-pkg-share path_smoother_core)/config/smoother.yaml"/>
+    <param name="smoother_plugin" value="$(var plugin)"/>
+  </node>
+</launch>

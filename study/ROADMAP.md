@@ -81,15 +81,24 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 
 本批实测发现的值得注意之处（详见各卡片"常见坑"）：Rolling 里 `uint8[]` 字段变成 `rosidl::Buffer`，部分旧代码写法编译失败；进程内通信 + `KeepAll` 会抛异常；单线程容器里组件构造函数阻塞会让整个容器停住；容器的命名空间不传给组件；跨进程传 1 MB 以上点云在 SensorDataQoS 下几乎全丢；`rclcpp_components` 头文件要求 C++20。
 
-## 第 5 批：把代码变成能交付的包（工程化）
+## 第 5 批：把代码变成能交付的包（工程化）✅
 
-| 计划卡片 | 源文档 |
+| 卡片 | 吸收的源文档 |
 |---|---|
-| 工作空间与 colcon | `Creating-A-Workspace/*`、`Colcon-Tutorial.rst`、`Creating-Your-First-ROS2-Package.rst`、`Developer-Tools/Build/Using-Variants.rst` |
-| ament_cmake | `Developer-Tools/About-Build.rst`、`Build/About-Build-System.rst`、`Ament-CMake-Documentation.rst`、`Developing-a-ROS-2-Package.rst`、`Ament-Lint-For-Clean-Code.rst` |
-| rosdep 依赖管理 | `Rosdep.rst`、`Developer-Tools/Build/Supplementing-Custom-Rosdep-Keys.rst` |
-| pluginlib 插件 | `Pluginlib.rst`（Nav2 的规划器、控制器、代价地图层都是插件） |
-| 测试 | `Developer-Tools/About-testing.rst`、`Debugging/About-testing.rst`、`Testing/Testing.rst`、`Testing/Cpp.rst`、`Testing/Integration.rst`、`Testing/CLI.rst` |
+| ✅ [工作空间与 colcon](cards/engineering/workspace-colcon.md) | `client-libraries/Working-with-Client-Libraries/Creating-A-Workspace/*`、`Colcon-Tutorial.rst`、`Creating-Your-First-ROS2-Package.rst`、`Developer-Tools/Build/Using-Variants.rst`、`Build/About-Build-System.rst`（构建工具部分） |
+| ✅ [ament_cmake](cards/engineering/ament-cmake.md) | `Developer-Tools/About-Build.rst`、`Build/About-Build-System.rst`、`Build/Ament-CMake-Documentation.rst`、`Build/Developing-a-ROS-2-Package.rst`、`Releases/Release-Kilted-Kaiju.rst`（`ament_target_dependencies` 弃用）、`Releases/Release-Humble-Hawksbill.rst`（头文件目录） |
+| ✅ [rosdep 依赖管理](cards/engineering/rosdep.md) | `client-libraries/Working-with-Client-Libraries/Rosdep.rst`、`Developer-Tools/Build/Supplementing-Custom-Rosdep-Keys.rst` |
+| ✅ [pluginlib 插件](cards/engineering/pluginlib.md) | `client-libraries/Working-with-Client-Libraries/Pluginlib.rst`、`Ament-CMake-Documentation.rst`（ament 索引部分） |
+| ✅ [测试](cards/engineering/testing.md) | `Developer-Tools/About-testing.rst`（目录页）、`Debugging/About-testing.rst`、`Debugging/Testing/Testing.rst`、`Testing/Cpp.rst`、`Testing/Integration.rst`、`Testing/CLI.rst`、`Build/Ament-Lint-For-Clean-Code.rst` |
+
+练习：✅ [编译与依赖的常见错误](labs/build-pitfalls.md)、✅ [用插件换路径平滑器](labs/plugin-smoother.md)、✅ [测试与代码规范检查](labs/testing-and-lint.md)。代码在 `labs/build_lab/`（`path_smoother_core`、`path_smoother_plugins` 两个包）。
+
+调整说明：
+- `Ament-Lint-For-Clean-Code.rst` 原计划放在 ament_cmake，实际并入"测试"卡片，因为 linter 是通过 `colcon test` 运行的。
+- `Testing/Testing.rst` 讲的是如何安装预发布（ros-testing）二进制来帮忙测试 ROS 本身，和测试自己的代码关系不大，只在卡片源文档里列出，不展开。
+- `Using-Variants.rst` 内容很短（元包的概念和私有变体写法），并入"工作空间与 colcon"的概念表。
+
+本批实测发现的值得注意之处（详见各卡片"常见坑"）：Rolling 已删除 `ament_target_dependencies`；`colcon test` 有失败时退出码仍为 0，`colcon test-result` 会读到旧的 XML；在 source 了某个工作空间的终端里编译，会把它永久写进新工作空间的 `setup.bash`；pluginlib 6.0.3 写了 `name` 后不能再用 `type` 查找（与文档说法不符），`ros2 plugin list` 正常不代表能加载；`add_library` 不写 `SHARED` 时库类型取决于是否 `find_package(rclcpp)`；镜像里 cppcheck 2.19 被静默跳过；离线时 xmllint 校验 `package.xml` 失败；`rosdep --ignore-src` 会把 underlay 中已有的包视为"有源码"。
 
 ## 第 6 批：看见系统在干什么（调试与观测）
 

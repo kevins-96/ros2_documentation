@@ -1,0 +1,6 @@
+smoother_node:
+  ros__parameters:
+    smoother_plugin: moving_average
+    points: 11
+    smoother:
+      window: 5
