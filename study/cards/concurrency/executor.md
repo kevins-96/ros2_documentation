@@ -8,7 +8,7 @@ status: sample
 
 > 适用：ROS 2 **Rolling**，rclcpp（API 于 2026-11-17 对照 rclcpp `rolling` 分支 33.2.0 核实）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
-> 源文档：[About-Executors.rst](../../source/ROS-Framework/client-libraries/About-Executors/About-Executors.rst)
+> 源文档：[About-Executors.rst](../../../source/ROS-Framework/client-libraries/About-Executors/About-Executors.rst)
 
 ## 1. 一句话定义
 
@@ -42,7 +42,7 @@ flowchart LR
 
 ## 4. 最小 C++ 代码（rclcpp）
 
-一个执行器、两个节点、两个线程。可编译文件：[card_executor_min.cpp](../labs/executor_lab/src/card_executor_min.cpp)
+一个执行器、两个节点、两个线程。可编译文件：[card_executor_min.cpp](../../labs/executor_lab/src/card_executor_min.cpp)
 
 ```cpp
 #include <chrono>
@@ -83,7 +83,7 @@ int main(int argc, char ** argv)
 
 ## 5. 常见坑（导航/控制场景）
 
-1. **单线程执行器里，一个慢回调卡住所有回调。** 规划服务每次算 300 ms，同一执行器里的 50 Hz 控制定时器就会出现 300 ms 的空档，相当于连续漏掉约 15 拍控制。🔍 实测见 [实验 A](../labs/executor-blocking.md)。
+1. **单线程执行器里，一个慢回调卡住所有回调。** 规划服务每次算 300 ms，同一执行器里的 50 Hz 控制定时器就会出现 300 ms 的空档，相当于连续漏掉约 15 拍控制。🔍 实测见 [实验 A](../../labs/executor-blocking.md)。
 2. **只把执行器换成 `MultiThreadedExecutor` 往往没用。** 如果所有回调都在节点的默认回调组里（默认组是互斥组），节点的行为等同于单线程。📄 实验 A 中 `multi + default` 的结果和单线程一样差。🔍
 3. **`spin()` 会阻塞。** 在 `main` 里写 `rclcpp::spin(node1); rclcpp::spin(node2);`，第二个节点要等第一个 spin 返回（通常是进程退出时）才会被处理。💡 多节点请用一个执行器 `add_node` 多次。
 4. **回调太慢时不是 FIFO。** 激光（高频）和目标点（低频）同时积压时，执行器在各实体间轮询，不保证"先到先处理"；要保证顺序或实时性，需要更强的手段（WaitSet、rclc Executor、优先级线程）。📄
@@ -93,12 +93,12 @@ int main(int argc, char ** argv)
 ## 6. 与其他概念的关系
 
 - [回调组 Callback Group](callback-group.md)：决定多线程执行器里**哪些回调能并行**。执行器给线程，回调组定规则。
-- 组件 Composition（卡片待建）：组件容器默认用单线程执行器。📄 源文档：[About-Composition.rst](../../source/ROS-Framework/nodes/About-Composition.rst)
+- 组件 Composition（卡片待建）：组件容器默认用单线程执行器。📄 源文档：[About-Composition.rst](../../../source/ROS-Framework/nodes/About-Composition.rst)
 - QoS（卡片待建）：消息积压在中间件层，队列深度由 QoS 的 depth 决定。📄 + 💡
 - WaitSet（卡片待建）：不用执行器、自己决定处理顺序的替代方案，适合需要确定性的控制链路。📄
-- 上一级：[总览脑图：让回调按时跑](../map/overview.md)
+- 上一级：[总览脑图：让回调按时跑](../../map/overview.md)
 
-## 7. 自测题（先自己答，再看[答案](../answers/executor-answers.md)）
+## 7. 自测题（先自己答，再看[答案](../../answers/executor-answers.md)）
 
 1. 一个节点里有 50 Hz 控制定时器和一个激光订阅（每次回调耗时 40 ms），都没有指定回调组，用 `MultiThreadedExecutor`（4 线程）运行。控制定时器两次触发的最大间隔大约是多少？为什么 4 个线程没有帮上忙？
 2. 你要把这两个回调拆到两个节点里（`controller` 和 `scan_filter`），仍然不显式创建任何回调组，还用同一个 4 线程 `MultiThreadedExecutor`。现在控制定时器还会被激光回调阻塞吗？说出你的推理依据。

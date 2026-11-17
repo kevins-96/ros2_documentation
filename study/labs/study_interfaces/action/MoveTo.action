@@ -1,0 +1,10 @@
+# 目标 goal
+Pose2D target
+float32 tolerance_m 0.1
+---
+# 结果 result
+bool reached
+float32 final_error_m
+---
+# 反馈 feedback
+float32 distance_remaining_m
