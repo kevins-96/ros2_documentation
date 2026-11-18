@@ -46,11 +46,11 @@ mindmap
       ✅ tracing 性能追踪
       ✅ RViz 与可视化
     让多台机器连起来
-      中间件 RMW 与 DDS
-      Domain ID 与发现
-      DDS 调优
-      Docker 部署
-      安全 SROS2
+      ✅ 中间件 RMW 与 DDS
+      ✅ Domain ID 与发现
+      ✅ DDS 调优与 XML
+      ✅ Docker 部署
+      ✅ 安全 SROS2
 ```
 
 ## 链接清单（与上图一一对应）
@@ -100,4 +100,11 @@ Mermaid 节点在 Obsidian 和 VS Code 里都不能稳定地点击跳转，导�
   - [调试与回溯：gdb、构建类型与 IDE](../cards/observability/gdb-debugging.md)
   - [tracing 性能追踪](../cards/observability/tracing.md)
   - 练习：[崩溃回溯与回调追踪](../labs/crash-and-trace.md)（覆盖上面两张卡片）
-- **让多台机器连起来：中间件与部署**（第 7 批，待建）
+- **让多台机器连起来：中间件与部署**（第 7 批）
+  - [中间件 RMW 与 DDS](../cards/middleware/rmw-dds.md)
+  - [Domain ID 与发现](../cards/middleware/domain-discovery.md)
+  - 练习：[中间件、Domain 与发现](../labs/middleware-discovery.md)（覆盖上面两张卡片）
+  - [DDS 调优与 Fast DDS XML](../cards/middleware/dds-tuning.md)
+  - [Docker 部署](../cards/middleware/docker-deploy.md)
+  - 练习：[DDS 调优、XML 配置与容器网络](../labs/dds-and-docker.md)（覆盖上面两张卡片）
+  - [安全 SROS2](../cards/middleware/sros2-security.md) · 练习：[SROS2 密钥库、强制模式与访问控制](../labs/sros2-keystore.md)

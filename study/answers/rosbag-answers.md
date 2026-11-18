@@ -16,7 +16,7 @@
 
 **消息怎么存：** 两个订阅都用"模板写真实类型、回调收 `SerializedMessage`"的写法（`create_subscription<nav_msgs::msg::Path>` + `std::shared_ptr<const rclcpp::SerializedMessage>` 回调），把 `(话题名, 类型字符串, 收到时间, 序列化消息)` 放进一个按时间淘汰的环形缓冲（`std::deque`，每次插入后弹出早于 `now - 10s` 的条目）。存序列化消息不用反序列化，开销小。
 
-**出错时怎么写盘：** 创建新的 `rosbag2_cpp::Writer`，`open()` 一个带时间戳的新目录（目录已存在会抛异常），按顺序对缓冲里每条调用 `writer.write(msg, topic, type, time)`，然后让 Writer 析构（离开作用域或 `reset()`），这时才写 `metadata.yaml`。💡 写盘可能花几十毫秒，别在控制回路的回调里做：放到单独线程或单独的回调组。
+**出错时怎么写盘：** 创建新的 `rosbag2_cpp::Writer`，`open()` 一个带时间戳的新目录（目录已存在会抛异常），按顺序对缓冲里每条调用 `writer.write(msg, topic, type, time)`，然后让 Writer 析构（离开作用域或 `reset()`），这时才写 `metadata.yaml`。💡 写盘可能花几十毫秒，别在控制回路的回调里做：放到单独线程或单独的回调组。这时缓冲会被两个线程同时访问（订阅回调在往里加，写盘线程在读），要用互斥锁保护：在锁内把缓冲 `swap` 到一个局部 `deque`（或拷贝一份），解锁后再慢慢写盘，避免写盘期间一直持锁阻塞订阅回调。
 
 **两个坑：**
 

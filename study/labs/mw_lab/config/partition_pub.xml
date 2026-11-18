@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 发布端：/probe 话题的 DataWriter 放进分区 part1。
+     profile_name 必须是完整的 ROS 话题名（带开头的 /），rmw_fastrtps 用它来查找 profile。 -->
+<profiles xmlns="http://www.eprosima.com">
+  <publisher profile_name="/probe">
+    <qos>
+      <partition>
+        <names>
+          <name>part1</name>
+        </names>
+      </partition>
+    </qos>
+  </publisher>
+</profiles>

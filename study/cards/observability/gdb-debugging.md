@@ -106,7 +106,7 @@ Node(package='observe_lab', executable='fake_planner',
 3. **构建类型会被 CMake 缓存。** 📄 改构建类型后要 `--cmake-clean-cache`（或删 `build/<包>`）。🔍 第 5 批也遇到过同样的缓存问题：`-D` 选项不带时沿用上次的值（见[测试与代码规范检查](../../labs/testing-and-lint.md)第 2 部分）。💡 反过来也成立：用 Debug 调完忘了改回来，现场跑的是 `-O0`，CPU 占用会高很多。
 4. **Release 下"崩溃的函数"可能根本不出现。** 🔍 `count_waypoints` 被内联后，第 0 帧变成 `std::_Function_handler<...>::_M_invoke`。看到第 0 帧是 `std::function` 包装或者回调 lambda，要想到真正出错的可能是被内联进去的小函数。
 5. **空指针解引用是未定义行为，不保证在那一行崩溃。** 💡 本例四种构建都在同一处 SIGSEGV，但优化器有权假设指针非空并重排代码；有时崩溃会"漂移"到别处，甚至不崩溃而得到错误结果。修复要从源头（检查规划结果）入手，而不是只看崩溃点。
-6. **容器里 gdb 会提示 `Error disabling address space randomization: Operation not permitted`。** 🔍 Docker 默认安全策略不允许关 ASLR，不影响拿回溯；需要可复现的地址时 `docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined`（💡 未实测）。
+6. **容器里 gdb 会提示 `Error disabling address space randomization: Operation not permitted`。** 🔍 Docker 默认安全策略不允许关 ASLR，不影响拿回溯；需要可复现的地址时 `docker run --cap-add=SYS_PTRACE --security-opt seccomp=unconfined`（💡 未实测）。注意 `seccomp=unconfined` 会关掉容器的整套系统调用过滤，明显削弱隔离，只在本机调试用的临时容器里加，不要写进部署用的镜像或 compose 文件。
 7. **多线程执行器崩溃时，`bt` 只显示当前线程。** 💡 用 `thread apply all bt`；崩溃线程会标出 `received signal` 的那个。
 
 ## 5. 与其他概念的关系

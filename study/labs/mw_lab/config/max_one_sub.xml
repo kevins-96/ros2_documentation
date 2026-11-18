@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- /probe 的发布端最多只和 1 个订阅端匹配：第 2、3 个订阅端"看得见、收不到"。 -->
+<profiles xmlns="http://www.eprosima.com">
+  <publisher profile_name="/probe">
+    <matchedSubscribersAllocation>
+      <initial>0</initial>
+      <maximum>1</maximum>
+      <increment>1</increment>
+    </matchedSubscribersAllocation>
+  </publisher>
+</profiles>
