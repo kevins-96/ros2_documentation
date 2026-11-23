@@ -9,6 +9,7 @@ status: sample
 > 适用：ROS 2 **Rolling**，rclcpp（API 于 2026-11-17 对照 rclcpp `rolling` 分支 33.2.0 核实）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Executors.rst](../../../source/ROS-Framework/client-libraries/About-Executors/About-Executors.rst)
+> 📐 设计动机：[实时系统的设计](../../design/realtime-design.md)：设计文档要求执行器的同步原语可替换、实时安全，Rolling 还没做到；`StaticSingleThreadedExecutor` 已从 Rolling 删除
 
 ## 1. 一句话定义
 
@@ -96,6 +97,7 @@ int main(int argc, char ** argv)
 - 组件 Composition（卡片待建）：组件容器默认用单线程执行器。📄 源文档：[About-Composition.rst](../../../source/ROS-Framework/nodes/About-Composition.rst)
 - QoS（卡片待建）：消息积压在中间件层，队列深度由 QoS 的 depth 决定。📄 + 💡
 - WaitSet（卡片待建）：不用执行器、自己决定处理顺序的替代方案，适合需要确定性的控制链路。📄
+- [实时系统的设计](../../design/realtime-design.md)（📐 设计动机）：执行器路径上的内存分配
 - 上一级：[总览脑图：让回调按时跑](../../map/overview.md)
 
 ## 7. 自测题（先自己答，再看[答案](../../answers/executor-answers.md)）

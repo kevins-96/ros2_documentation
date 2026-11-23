@@ -19,6 +19,9 @@
   <depend>lifecycle_msgs</depend>
   <depend>rosgraph_msgs</depend>
   <depend>rclcpp_components</depend>
+  <depend>geometry_msgs</depend>
+  <depend>rmw_fastrtps_cpp</depend>
+  <depend>fastdds</depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>launch_xml</exec_depend>
