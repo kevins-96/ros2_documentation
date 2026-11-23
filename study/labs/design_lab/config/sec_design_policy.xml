@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 第 11 批：访问控制策略的设计实验（配合 sec_probe 使用，见 labs/security-build-design-check.md）。
+     写 ROS 名字；ros2 security create_permission 用 sros2 自带的 XSLT 翻译成 DDS 名字并签名。
+     公共部分和 mw_lab/config/policy.xml 相同，照抄 sros2 仓库 test/policies/common/node/*.xml。 -->
+<policy version="0.2.0">
+  <enclaves>
+    <!-- 实验 A：同一个 enclave 里两个 profile，a 只许发 ta，b 只许发 tb -->
+    <enclave path="/design/multi">
+      <profiles>
+        <profile ns="/" node="a">
+          <!-- 每个节点都需要的：日志、参数事件、时钟、参数服务、类型描述服务 -->
+          <topics publish="ALLOW"><topic>rosout</topic></topics>
+          <topics publish="ALLOW" subscribe="ALLOW"><topic>/parameter_events</topic></topics>
+          <topics subscribe="ALLOW"><topic>/clock</topic></topics>
+          <services reply="ALLOW" request="ALLOW">
+            <service>~/describe_parameters</service>
+            <service>~/get_parameter_types</service>
+            <service>~/get_parameters</service>
+            <service>~/list_parameters</service>
+            <service>~/set_parameters</service>
+            <service>~/set_parameters_atomically</service>
+            <service>~/get_type_description</service>
+          </services>
+          <topics publish="ALLOW"><topic>ta</topic></topics>
+        </profile>
+        <profile ns="/" node="b">
+          <!-- 每个节点都需要的：日志、参数事件、时钟、参数服务、类型描述服务 -->
+          <topics publish="ALLOW"><topic>rosout</topic></topics>
+          <topics publish="ALLOW" subscribe="ALLOW"><topic>/parameter_events</topic></topics>
+          <topics subscribe="ALLOW"><topic>/clock</topic></topics>
+          <services reply="ALLOW" request="ALLOW">
+            <service>~/describe_parameters</service>
+            <service>~/get_parameter_types</service>
+            <service>~/get_parameters</service>
+            <service>~/list_parameters</service>
+            <service>~/set_parameters</service>
+            <service>~/set_parameters_atomically</service>
+            <service>~/get_type_description</service>
+          </services>
+          <topics publish="ALLOW"><topic>tb</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+    <!-- 实验 B：a 允许发 ta，b 拒绝发 ta；DENY 优先于 ALLOW -->
+    <enclave path="/design/deny">
+      <profiles>
+        <profile ns="/" node="a">
+          <!-- 每个节点都需要的：日志、参数事件、时钟、参数服务、类型描述服务 -->
+          <topics publish="ALLOW"><topic>rosout</topic></topics>
+          <topics publish="ALLOW" subscribe="ALLOW"><topic>/parameter_events</topic></topics>
+          <topics subscribe="ALLOW"><topic>/clock</topic></topics>
+          <services reply="ALLOW" request="ALLOW">
+            <service>~/describe_parameters</service>
+            <service>~/get_parameter_types</service>
+            <service>~/get_parameters</service>
+            <service>~/list_parameters</service>
+            <service>~/set_parameters</service>
+            <service>~/set_parameters_atomically</service>
+            <service>~/get_type_description</service>
+          </services>
+          <topics publish="ALLOW"><topic>ta</topic></topics>
+        </profile>
+        <profile ns="/" node="b">
+          <!-- 每个节点都需要的：日志、参数事件、时钟、参数服务、类型描述服务 -->
+          <topics publish="ALLOW"><topic>rosout</topic></topics>
+          <topics publish="ALLOW" subscribe="ALLOW"><topic>/parameter_events</topic></topics>
+          <topics subscribe="ALLOW"><topic>/clock</topic></topics>
+          <services reply="ALLOW" request="ALLOW">
+            <service>~/describe_parameters</service>
+            <service>~/get_parameter_types</service>
+            <service>~/get_parameters</service>
+            <service>~/list_parameters</service>
+            <service>~/set_parameters</service>
+            <service>~/set_parameters_atomically</service>
+            <service>~/get_type_description</service>
+          </services>
+          <topics publish="DENY"><topic>ta</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+    <!-- 实验 C：通配符 fib* 会匹配到哪些名字 -->
+    <enclave path="/design/glob">
+      <profiles>
+        <profile ns="/" node="a">
+          <!-- 每个节点都需要的：日志、参数事件、时钟、参数服务、类型描述服务 -->
+          <topics publish="ALLOW"><topic>rosout</topic></topics>
+          <topics publish="ALLOW" subscribe="ALLOW"><topic>/parameter_events</topic></topics>
+          <topics subscribe="ALLOW"><topic>/clock</topic></topics>
+          <services reply="ALLOW" request="ALLOW">
+            <service>~/describe_parameters</service>
+            <service>~/get_parameter_types</service>
+            <service>~/get_parameters</service>
+            <service>~/list_parameters</service>
+            <service>~/set_parameters</service>
+            <service>~/set_parameters_atomically</service>
+            <service>~/get_type_description</service>
+          </services>
+          <topics publish="ALLOW"><topic>fib*</topic></topics>
+        </profile>
+      </profiles>
+    </enclave>
+  </enclaves>
+</policy>

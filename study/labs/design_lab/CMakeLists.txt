@@ -36,6 +36,8 @@ set(targets
   time_design_probe
   rt_alloc_probe
   ipc_design_probe
+  sec_probe
+  graph_probe
 )
 foreach(t ${targets})
   add_executable(${t} src/${t}.cpp)
@@ -72,7 +74,7 @@ target_link_libraries(name_probe_component rclcpp::rclcpp rclcpp_components::com
 rclcpp_components_register_nodes(name_probe_component "design_lab::NameProbe")
 install(TARGETS name_probe_component
   ARCHIVE DESTINATION lib LIBRARY DESTINATION lib RUNTIME DESTINATION bin)
-install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY launch config DESTINATION share/${PROJECT_NAME})
 
 install(TARGETS ${targets} DESTINATION lib/${PROJECT_NAME})
 install(PROGRAMS scripts/capture_dds_names.sh scripts/signal_logger.sh DESTINATION lib/${PROJECT_NAME})

@@ -10,6 +10,7 @@ aliases: [工作空间, workspace, colcon, underlay, overlay, setup.bash, local_
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 容器里实测，colcon-core 0.21.3、colcon-ros 0.5.0）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Creating-A-Workspace.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Creating-A-Workspace/Creating-A-Workspace.rst)、[Colcon-Tutorial.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Colcon-Tutorial.rst)、[Creating-Your-First-ROS2-Package.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Creating-Your-First-ROS2-Package.rst)、[Using-Variants.rst](../../../source/Developer-Tools/Build/Using-Variants.rst)、[About-Build-System.rst](../../../source/Developer-Tools/Build/About-Build-System.rst)（构建工具部分）
+> 📐 设计动机：[构建系统的设计](../../design/build-system-design.md)：构建工具 vs 构建系统、为什么选 colcon、`AMENT_PREFIX_PATH` 和 ament 资源索引、交叉编译
 
 ## 1. 一句话定义
 
@@ -105,6 +106,7 @@ path_smoother_plugins   +
 - [测试](testing.md)：`colcon test` 和 `colcon test-result`
 - [启动参数与重映射](../configuration/node-arguments.md)：`source` 之后才能 `ros2 run`
 - 练习：[编译与依赖的常见错误](../../labs/build-pitfalls.md)
+- [构建系统的设计](../../design/build-system-design.md)（📐 设计动机）：为什么没有 devel space 和单一 CMake 上下文，colcon 的扩展点
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/workspace-colcon-answers.md)）

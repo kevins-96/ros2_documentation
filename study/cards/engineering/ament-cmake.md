@@ -10,6 +10,7 @@ aliases: [ament_cmake, CMakeLists, ament_package, ament_export_targets, ament_ex
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 容器里实测，CMake 规则以 ament_cmake 当前版本为准）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Build.rst](../../../source/Developer-Tools/About-Build.rst)、[About-Build-System.rst](../../../source/Developer-Tools/Build/About-Build-System.rst)、[Ament-CMake-Documentation.rst](../../../source/Developer-Tools/Build/Ament-CMake-Documentation.rst)、[Developing-a-ROS-2-Package.rst](../../../source/Developer-Tools/Build/Developing-a-ROS-2-Package.rst)、[Release-Kilted-Kaiju.rst](../../../source/Releases/Release-Kilted-Kaiju.rst)（`ament_target_dependencies` 弃用说明）、[Release-Humble-Hawksbill.rst](../../../source/Releases/Release-Humble-Hawksbill.rst)（头文件安装目录的变化）
+> 📐 设计动机：[构建系统的设计](../../design/build-system-design.md)：ament 相对 catkin 改了什么、symlink install 怎么覆盖 `install()`
 
 ## 1. 一句话定义
 
@@ -135,6 +136,7 @@ target_link_libraries(path_smoother_plugins path_smoother_core::smoother_interfa
 - [测试](testing.md)：`BUILD_TESTING`、`ament_add_gtest`、`ament_lint_auto`
 - [组件与组合](../concurrency/component.md)：`rclcpp_components_register_node` 也是 ament 资源登记
 - 练习：[编译与依赖的常见错误](../../labs/build-pitfalls.md)
+- [构建系统的设计](../../design/build-system-design.md)（📐 设计动机）：ament 为什么要从 catkin 分出来
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/ament-cmake-answers.md)）

@@ -225,7 +225,7 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
   - 前端采用的是抽象描述解析（`Entity` 加 `@expose_action`）。
   - XML 注释里写 `--` 会让整个文件解析失败。
 
-## 第 10 批：设计理念 · 并发与性能 ✅（待合并）
+## 第 10 批：设计理念 · 并发与性能 ✅
 
 | 设计笔记 | 吸收的设计文档（`articles/`） |
 |---|---|
@@ -262,11 +262,42 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
   - `@optional` 能写但在 C++ 里没效果；不支持字典。
 - **唯一网络流**：Fast DDS 只支持订阅端（换端口 7001、7002…），发布者用 `STRICTLY_REQUIRED` 会创建失败；流标签和 DSCP 都是 0。
 
-## 第 11 批：设计理念（计划）
+## 第 11 批：设计理念 · 安全与工程化 ✅（待合并）
 
-| 批次 | 设计笔记（暂定） | 设计文档（`articles/`） | 学完哪批卡片后读 |
-|---|---|---|---|
-| 第 11 批：安全与工程化的设计 | DDS 安全与 enclave 的设计；威胁模型；构建系统的设计；发现与协商 | `180_ros2_dds_security.md`、`181_ros2_access_control_policies.md`、`182_ros2_security_enclaves.md`、`183_ros2_threat_model.md`、`100_ament.md`、`101_build_tool.md`、`cross_compilation_build_tools_design.md`、`discovery_and_negotiation.md` | 第 5、7 批 |
+| 设计笔记 | 吸收的设计文档（`articles/`） |
+|---|---|
+| ✅ [安全的设计](design/security-design.md) | [`180_ros2_dds_security.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/180_ros2_dds_security.md)、[`182_ros2_security_enclaves.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/182_ros2_security_enclaves.md) |
+| ✅ [访问控制策略的设计](design/access-control-design.md) | [`181_ros2_access_control_policies.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/181_ros2_access_control_policies.md) |
+| ✅ [威胁模型](design/threat-model-design.md) | [`183_ros2_threat_model.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/183_ros2_threat_model.md) |
+| ✅ [构建系统的设计](design/build-system-design.md) | [`100_ament.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/100_ament.md)、[`101_build_tool.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/101_build_tool.md)、[`cross_compilation_build_tools_design.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/cross_compilation_build_tools_design.md) |
+| ✅ [发现与协商的设计](design/discovery-negotiation-design.md) | [`discovery_and_negotiation.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/discovery_and_negotiation.md) |
+
+练习：✅ [安全与工程化的设计还成立吗](labs/security-build-design-check.md)。代码放在 `labs/design_lab/`，本批新增 2 个探针程序 `sec_probe`（同一进程里多个节点、多个 context 的访问控制）、`graph_probe`（图事件和端点信息），以及 `config/sec_design_policy.xml`（三个实验用的 enclave）和 `config/aarch64-toolchain.cmake`（最小的交叉编译工具链文件）。`design_lab` 现在会安装 `config/` 目录。现有卡片中，安全 SROS2、Domain ID 与发现、工作空间与 colcon、ament_cmake、组件这 5 张加了"📐 设计动机"链接。
+
+调整说明：
+- 计划里的"DDS 安全与 enclave 的设计"拆成两篇：[安全的设计](design/security-design.md)（180 + 182）和[访问控制策略的设计](design/access-control-design.md)（181），因为 policy 的设计取舍内容很多。
+- 威胁模型原文 5000 多行，主要是两张威胁表，笔记只收方法（参与者、资产、入口、信任边界、STRIDE + DREAD）和与导航相关的条目。
+- 实测环境：`ros:rolling-ros-base`，sros2 0.17.1，Fast DDS 3.6.2，colcon-core 0.21.3，colcon-ros 0.5.0，ament_cmake 2.9.3，交叉编译器 `g++-aarch64-linux-gnu`（GCC 15）。
+
+本批实测发现的设计与现状差异（详见各笔记的对照表）：
+- **enclave**：
+  - `ROS_SECURITY_ENCLAVE_OVERRIDE` 确实优先于 `--enclave`；不写 `-e` 时落到根 enclave（`ks/enclaves`），宽松模式下照常以不安全模式启动。
+  - enclave 必须是绝对路径，launch_ros 里没有任何 enclave 支持，设计里"launch 推送相对 enclave"没有实现。
+  - 一个进程里建两个 context 可以用两个 enclave，设计文档把这列为顾虑。
+  - Fast DDS 的安全日志插件能用（`ROS_SECURITY_LOG_FILE` 等三个变量），本仓库文档没提；被拒绝的访问记为 EMERGENCY。
+- **访问控制**：
+  - 同一 enclave 里的 profile 合并成一个 grant，节点之间没有权限隔离：profile 只写了 `ta` 的节点照样能发 `tb`。
+  - DENY 跨 profile 生效；生成的文件里 DENY 排在前面。
+  - 通配符 `fib*` 会匹配 `fib/_action/status`、`fib/deep/x`，正是设计文档担心的"话题权限漏到动作"。
+  - 模板会给每个 grant 自动追加 `ros_discovery_info` 的读写权限。
+- **构建**：
+  - `source setup.bash` 后 `CMAKE_PREFIX_PATH` 不设，colcon-ros 构建时才从 `AMENT_PREFIX_PATH` 推出；不用 colcon 时 CMake 靠 `PATH` 推出前缀。
+  - ament 索引的标记文件是空文件，删掉它包就"消失"；无清单的 CMake 包只在 colcon 的索引里，`ros2 pkg` 看不到。
+  - `DESTDIR` 已经支持；没有 profile，改用 mixin 和 defaults；默认 mixin 里没有交叉编译的。
+  - `cross_compile` 工具已弃用，文档推荐 `docker buildx`；没有 sysroot 时 CMake 会找到宿主机 x86 的 rclcpp。
+- **发现**：
+  - 另一个进程创建发布者后约 2 ms 收到图事件；`kill -9` 之后约 19.5 秒才从图里消失（Fast DDS 默认租期 20 秒）。
+  - 节点到参与者的对应关系通过 DDS 话题 `ros_discovery_info` 广播（`ParticipantEntitiesInfo`）。
 
 设计文档里有意不收：`080_ros_documentation_system.md`、`per_package_documentation.md`（写文档系统）、`200_migration_guide_from_ros1.md`（ROS 1 迁移）、`114_generated_interfaces_python.md`（Python）。
 

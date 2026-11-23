@@ -10,6 +10,7 @@ aliases: [Domain ID, ROS_DOMAIN_ID, 域, 发现, discovery, ROS_AUTOMATIC_DISCOV
 > 适用：ROS 2 **Rolling**，Fast DDS 3.6.2（2026-11-17 实测：单机多进程 + 两个 Docker 容器模拟两台机器）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Domain-ID.rst](../../../source/ROS-Framework/nodes/About-Domain-ID.rst)、[Configuring-ROS2-Environment.rst](../../../source/Get-Started/Configuring-ROS2-Environment.rst)（Domain 与发现部分）、[Improved-Dynamic-Discovery.rst](../../../source/Developer-Tools/Launch/Improved-Dynamic-Discovery.rst)、[Discovery-Server.rst](../../../source/Developer-Tools/Launch/Discovery-Server/Discovery-Server.rst)
+> 📐 设计动机：[发现与协商的设计](../../design/discovery-negotiation-design.md)：计算图 vs 数据层图、七种发现系统、图事件与存活性（`kill -9` 后约 20 秒才从图里消失）
 
 ## 1. 一句话定义
 
@@ -135,6 +136,7 @@ ros2 daemon stop && ros2 topic list
 - [Docker 部署](docker-deploy.md)：容器网络模式影响多播和共享内存
 - [安全 SROS2](sros2-security.md)：加密后的发现报文；permissions 绑定 Domain ID
 - 练习：[中间件、Domain 与发现](../../labs/middleware-discovery.md)
+- [发现与协商的设计](../../design/discovery-negotiation-design.md)（📐 设计动机）：ROS 2 落在七种系统里的哪一种，图事件有多快
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/domain-discovery-answers.md)）
