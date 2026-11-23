@@ -73,7 +73,7 @@ study/
 | 📄 | 仓库文档原文的事实 | 可直接用；每张卡片顶部给出源文件链接 |
 | 🔍 | 对照 rclcpp 源码或在 `ros:rolling-ros-base` 镜像里实测核实过 | 可直接用；注明了核实日期和版本 |
 | 💡 | 经验补充或推导 | 可信但要自己验证 |
-| 📐 | [ros2/design](https://github.com/ros2/design) 设计文档原文（固定在提交 `93a415b`） | 讲"为什么"，不一定是现状；和 Rolling 不同的地方在对照表里标了 🔄、⏳ 或 🗑️ |
+| 📐 | [ros2/design](https://github.com/ros2/design) 设计文档原文（固定在提交 `93a415b`，本地副本见下文"离线读 ros2/design 原文"） | 讲"为什么"，不一定是现状；和 Rolling 不同的地方在对照表里标了 🔄、⏳ 或 🗑️ |
 
 ## 编译所有练习
 
@@ -89,6 +89,23 @@ colcon build && source install/setup.bash
 ```
 
 或用官方镜像：`docker run -it --rm -v <你的仓库路径>/study/labs:/ws/src ros:rolling-ros-base`，容器内 `cd /ws && colcon build`。
+
+## 离线读 ros2/design 原文
+
+设计文档以 git submodule 的形式放在仓库根目录的 `external/ros2_design/`，固定在设计笔记引用的提交 `93a415b`，原文是英文、Apache-2.0。
+
+```bash
+# 新克隆时一起拉下来
+git clone --recurse-submodules https://github.com/kevins-96/ros2_documentation.git
+# 已经克隆过：补拉一次即可
+git submodule update --init external/ros2_design
+```
+
+- 文章在 `external/ros2_design/articles/`。和笔记的对应关系见[路线图](ROADMAP.md)第 8 批的表格，表里的文件名可以直接在 `articles/` 里找到。
+- 用 Obsidian 或 VS Code 打开就能读。文首的 YAML 和 `{{ page.title }}` 是网站模板用的，不用管。
+- 大部分插图用 `../img/` 相对路径，离线能显示。`020_ros_with_dds.md`、`050_ros_rpc_design.md`、`node_lifecycle.md` 里的 4 张图写的是 `/img/...` 绝对路径，离线不显示，要去 `external/ros2_design/img/` 里找。
+- 拉 `pull` 时 submodule 不会自动更新，它会一直停在 `93a415b`。这是有意的：笔记的"设计 vs Rolling 对照"都以这个版本为准。
+- 设计文档里有 `qos.md`、`README.md` 这类和 `study/` 重名的文件。现在全库用相对路径链接，不受影响；以后如果改用 `[[wikilink]]`，要在 Obsidian 的"设置 → 文件与链接 → 排除的文件"里加上 `external/`。
 
 ## 建议学习路线
 
