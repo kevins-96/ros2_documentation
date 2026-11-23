@@ -1,0 +1,19 @@
+<!-- 第 9 批：XML 前端（151_roslaunch_xml）。对照同目录的 frontend_demo.launch.py：两者应得到同样的动作。
+     用法：ros2 launch design_lab frontend_demo.launch.xml，加 robot:=robot2 换命名空间，加 show-args 选项看参数。
+     注意：XML 注释里不能出现两个连续的减号，所以这里没把命令行选项原样写出来。 -->
+<launch>
+  <arg name="robot" default="robot1" description="机器人命名空间"/>
+  <arg name="use_lidar" default="true" description="是否启动激光相关节点"/>
+  <let name="ns" value="/$(var robot)"/>
+  <group>
+    <push_ros_namespace namespace="$(var ns)"/>
+    <node pkg="design_lab" exec="remap_probe" name="planner" if="$(var use_lidar)" output="screen">
+      <param name="max_speed" value="1.0"/>
+      <param name="frame_ids" value="map,odom,base_link" value-sep=","/>
+      <param name="limits">
+        <param name="accel" value="$(eval '0.5 * 2')"/>
+      </param>
+      <remap from="scan" to="scan_filtered"/>
+    </node>
+  </group>
+</launch>

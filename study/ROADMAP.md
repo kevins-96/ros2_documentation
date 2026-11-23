@@ -144,7 +144,7 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 
 本批实测发现的值得注意之处（详见各卡片"常见坑"）：两个 `network_mode: host` 的容器默认互相收不到（Fast DDS 走共享内存而 `/dev/shm` 不共享），没有任何报错；`ros2 daemon` 只按 Domain ID 和 RMW 区分，后来改的 `ROS_DISCOVERY_SERVER` 等变量它看不到；文档的 Super Client XML 在 Fast DDS 3 里解析失败并被整个忽略，`fastdds discovery -i` 已弃用；Fast DDS XML 教程对默认发布模式的说法自相矛盾，源码是同步；XML profile 名必须带 `/`，分区和匹配数上限在 CLI 里看不出来，匹配数上限时被拒的订阅端仍报告 `matched=1`；`nav_msgs/Path` 序列化比同样字节数的 `PointCloud2` 慢约 50 倍；`ipfrag_high_thresh` 新内核默认 4 MB 而不是文档说的 256 KB；SROS2 不设 `Enforce` 时配错会悄悄降级，permissions 绑定创建时的 Domain ID，改名或重映射会被访问控制在启动时拒绝，加密后 enclave 名字仍是明文；容器里 root 生成的私钥权限是 `666`；部署教程的 Dockerfile 下载链接 404、默认 `humble`，预期输出里 talker/listener 写反；安全教程的 `zenohd` 应为 `rmw_zenohd`。
 
-## 第 8 批：设计理念 · 通信与中间件 ✅（待合并）
+## 第 8 批：设计理念 · 通信与中间件 ✅
 
 来源换成了 [ros2/design](https://github.com/ros2/design)（Apache-2.0，固定在提交 `93a415b`，2026-11-23 读取）。设计文档讲"为什么这样设计"，很多是早期提案，所以每篇笔记都有一张"设计 vs Rolling 现状"对照表，标 📐 的句子只代表设计意图。设计文档原文没有复制进 `study/`，笔记里的引用都链接到固定提交，原文以后改了也不影响对照。想离线读原文，可以用仓库根目录的 git submodule `external/ros2_design/`，它固定在同一个提交，用法见 [README](README.md)。
 
@@ -171,11 +171,64 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 - **接口**：`byte` → `unsigned char`、`char` → `uint8_t`（设计是 `std::byte`、`char`）；有界字符串在赋值、序列化、反序列化时都不检查；常量生成 `static constexpr` 而不是 `enum`；`MessageInitialization::ZERO` 反而最慢（生成代码把数组清零两次），`DEFAULTS_ONLY` 接近 0；Fast DDS 类型支持直接序列化 ROS 结构体，没有设计里那次"拷贝成 DDS 类型"。
 - **整体**：`rmw_zenoh_cpp` 不是 DDS，Kilted 起是 Tier 1（设计里"所有 rmw 都基于 DDS"已过时）。
 
-## 第 9–11 批：设计理念（计划，按顺序做，每批一个 PR）
+## 第 9 批：设计理念 · 配置与启停 ✅（待合并）
+
+| 设计笔记 | 吸收的设计文档（`articles/`） |
+|---|---|
+| ✅ [参数的设计](design/parameter-design.md) | [`055_ros_parameter_design.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/055_ros_parameter_design.md)、[`160_ros_command_line_arguments.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/160_ros_command_line_arguments.md)（参数部分） |
+| ✅ [名字与重映射的设计](design/remapping-design.md) | [`141_static_remapping.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/141_static_remapping.md)、[`160_ros_command_line_arguments.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/160_ros_command_line_arguments.md) |
+| ✅ [生命周期的设计](design/lifecycle-design.md) | [`node_lifecycle.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/node_lifecycle.md) |
+| ✅ [时钟与时间的设计](design/time-design.md) | [`130_ros_time.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/130_ros_time.md) |
+| ✅ [launch 的设计](design/launch-design.md) | [`150_roslaunch.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/150_roslaunch.md)、[`151_roslaunch_xml.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/151_roslaunch_xml.md)、[`152_roslaunch_frontend.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/152_roslaunch_frontend.md) |
+
+练习：✅ [配置与启停的设计还成立吗](labs/config-design-check.md)。代码放在 `labs/design_lab/`，本批新增 4 个探针程序、1 个组件、1 个信号记录脚本，以及 `launch/` 下的 4 个 launch 文件。现有卡片中，参数、启动参数与重映射、launch、生命周期节点、日志、tf2 与时间、rosbag、组件这 8 张在顶部加了"📐 设计动机"链接。
+
+调整说明：
+- 计划里"名字、重映射与命令行参数"合成一篇。命令行参数设计文档里讲参数的那部分，放进了参数那篇。
+- 新增"时钟与时间的设计"。卡片里没有专门讲时间的，原来只在 tf2 与时间、日志卡片里零散提到。
+- 实测环境：`ros:rolling-ros-base`，rclcpp / rclcpp_lifecycle 33.2.0，rcl 10.6.0，launch 3.10.3，launch_ros 0.30.3。
+
+本批实测发现的设计与现状差异（详见各笔记的对照表）：
+- **重映射**：
+  - 通配符 `*`、`**` 和反向引用没实现，写了节点直接起不来。
+  - `rostopic://`、`rosservice://` 可以只改话题或只改服务。
+  - 一条规则改动作名就能改掉动作的 5 个隐藏名字；但单个隐藏话题也能被单独改走。
+  - 规则先改节点名再改命名空间，`planner:__ns` 遇上 `planner:__node` 会失效。
+  - `ROS_NAMESPACE` 被忽略；旧写法 `__ns:=` 已弃用，但仍然有效。
+- **参数**：
+  - "预先声明"已成默认。
+  - 校验回调、单参数回调都已实现。
+  - 参数事件只有一个全局话题 `/parameter_events`。
+  - 描述里的范围会被自动执行。
+  - `ros2 param set ... --atomic` 能原子设置多个参数，`ros2 param load` 是逐个设置。
+  - `-p 节点名:参数` 只对根命名空间里的节点有效，对命名空间里的节点静默无效。
+  - YAML 里的键按第一次出现的顺序套用，`-p` 算作 `/**`。
+  - 核心库没有全局参数服务器，也没有 `searchParam`。
+- **生命周期**：
+  - FAILURE 退回原状态，ERROR 或异常才进 ErrorProcessing（设计里 Activating 的非成功结果都进 ErrorProcessing）。
+  - 管理接口是一个 `change_state` 服务加 4 个查询服务，不是每个转换一个。
+  - `transition_event` 是 volatile 的，不是锁存的。
+  - 只有发布者受状态管理。
+  - 非法转换时 `configure(rc)` 不写 `rc`。
+- **时间**：
+  - 收到 `/clock` 前时间为 0，暂停时不外推，跳变回调在新时间生效前调用，这三点都和设计一致。
+  - steady、system、ros 三种时间是同一个 C++ 类型，混用只在运行时抛异常，编译期查不出来。
+  - `rclcpp::Rate` 默认用系统时钟。
+  - `min_forward` 设得太小时，每次 `/clock` 更新都会触发跳变回调。
+  - `/clock` 用 best effort。
+- **launch**：
+  - SIGINT → SIGTERM → SIGKILL 各隔 5 s，日志里 SIGTERM 之后的那个数字是累计时间。
+  - launch 收到 SIGTERM 时和收到 SIGINT 处理一样，不会立刻 SIGKILL 子进程。
+  - `sigterm_timeout:=` 在命令行上全局生效，即使 launch 文件没声明它。
+  - `Node(name=...)` 会改掉多节点进程里的所有节点。
+  - 容器不拒绝同名节点，但容器自己的参数确实不会传给加载的节点。
+  - 前端采用的是抽象描述解析（`Entity` 加 `@expose_action`）。
+  - XML 注释里写 `--` 会让整个文件解析失败。
+
+## 第 10–11 批：设计理念（计划，按顺序做，每批一个 PR）
 
 | 批次 | 设计笔记（暂定） | 设计文档（`articles/`） | 学完哪批卡片后读 |
 |---|---|---|---|
-| 第 9 批：配置与启停的设计 | 参数的设计；名字、重映射与命令行参数的设计；launch 的设计；生命周期节点的设计；时钟与时间的设计 | `055_ros_parameter_design.md`、`141_static_remapping.md`、`160_ros_command_line_arguments.md`、`150_roslaunch.md`、`151_roslaunch_xml.md`、`152_roslaunch_frontend.md`、`node_lifecycle.md`、`130_ros_time.md` | 第 2、3 批 |
 | 第 10 批：并发与性能的设计 | 实时系统的设计；进程内通信与零拷贝的设计；rmw 接口与序列化的设计 | `120_realtime_background.md`、`121_realtime_proposal.md`、`intraprocess_communication.md`、`zero_copy.md`、`060_ros_middleware_interface.md`、`serialization.md`、`unique_network_flows.md` | 第 4、7 批 |
 | 第 11 批：安全与工程化的设计 | DDS 安全与 enclave 的设计；威胁模型；构建系统的设计；发现与协商 | `180_ros2_dds_security.md`、`181_ros2_access_control_policies.md`、`182_ros2_security_enclaves.md`、`183_ros2_threat_model.md`、`100_ament.md`、`101_build_tool.md`、`cross_compilation_build_tools_design.md`、`discovery_and_negotiation.md` | 第 5、7 批 |
 

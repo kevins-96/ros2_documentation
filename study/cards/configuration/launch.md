@@ -10,6 +10,7 @@ aliases: [launch, 启动文件, ros2 launch, launch file, 替换, substitution, 
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 上实测，launch 3.10.3，launch_ros 0.30.3）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Launch.rst](../../../source/Developer-Tools/About-Launch.rst)、[Launch-Main.rst](../../../source/Developer-Tools/Launch/Launch-Main.rst)、[Creating-Launch-Files.rst](../../../source/Developer-Tools/Launch/Creating-Launch-Files.rst)、[Launch-system.rst](../../../source/Developer-Tools/Launch/Launch-system.rst)、[Launch-file-different-formats.rst](../../../source/Developer-Tools/Launch/Launch-file-different-formats.rst)、[Using-Substitutions.rst](../../../source/Developer-Tools/Launch/Using-Substitutions.rst)、[Using-Event-Handlers.rst](../../../source/Developer-Tools/Launch/Using-Event-Handlers.rst)、[Using-ROS2-Launch-For-Large-Projects.rst](../../../source/Developer-Tools/Launch/Using-ROS2-Launch-For-Large-Projects.rst)、[Launching-Multiple-Nodes.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/Launching-Multiple-Nodes/Launching-Multiple-Nodes.rst)
+> 📐 设计动机：[launch 的设计](../../design/launch-design.md)：进程与节点分开、SIGINT → SIGTERM → SIGKILL 的升级、事件驱动的启动顺序、XML 前端怎么接到 Python 实现
 
 ## 1. 一句话定义
 
@@ -133,6 +134,7 @@ ros2 launch ./some_launch.py                                    # 也可以直�
 - [URDF 与机器人模型](../coordinates/urdf.md)：`Command(['xacro ', path])` 生成 `robot_description`
 - [组件与组合](../concurrency/component.md)：`node_container`、`composable_node`、`load_composable_node`
 - 练习：[launch 与名字解析](../../labs/launch-and-names.md)
+- [launch 的设计](../../design/launch-design.md)（📐 设计动机）：信号升级的实测时间、`name=` 对多节点进程的影响、容器 API
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/launch-answers.md)）

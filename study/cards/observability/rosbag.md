@@ -10,6 +10,7 @@ aliases: [rosbag, rosbag2, ros2 bag, bag 录制, 回放, mcap, ros2 bag record, 
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 容器里实测，存储格式默认 MCAP）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Recording-And-Playing-Back-Data.rst](../../../source/ROS-Framework/interfaces/Working-with-interfaces/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.rst)、[Recording-A-Bag-From-Your-Own-Node-CPP.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Recording-A-Bag-From-Your-Own-Node-CPP.rst)、[Reading-From-A-Bag-File-CPP.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Reading-From-A-Bag-File-CPP.rst)、[Overriding-QoS-Policies-For-Recording-And-Playback.rst](../../../source/Developer-Tools/Debugging/Testing/Overriding-QoS-Policies-For-Recording-And-Playback.rst)
+> 📐 设计动机：[时钟与时间的设计](../../design/time-design.md)：`--clock` 回放、变速和 `--loop` 时下游节点看到的时间怎么变
 
 ## 1. 一句话定义
 
@@ -137,6 +138,7 @@ while (reader.has_next()) {
 - [命令行工具](cli-tools.md)：录之前先用 `ros2 topic list -t`、`hz` 确认话题和频率
 - [测试](../engineering/testing.md)：Reader 读 bag 做离线回归测试
 - 练习：[录制、回放与离线分析](../../labs/bag-record-replay.md)
+- [时钟与时间的设计](../../design/time-design.md)（📐 设计动机）：回放循环时的时间跳变
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/rosbag-answers.md)）
