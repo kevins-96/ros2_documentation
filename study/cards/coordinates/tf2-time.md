@@ -10,6 +10,7 @@ aliases: [tf2 与时间, tf2 time, TimePointZero, extrapolation, 外推, 时间�
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 上编译实测，tf2_ros 0.46.5，message_filters 8.0.5）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp/tf2 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Learning-About-Tf2-And-Time-Cpp.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Tf2/Learning-About-Tf2-And-Time-Cpp.rst)、[Time-Travel-With-Tf2-Cpp.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Tf2/Time-Travel-With-Tf2-Cpp.rst)、[Using-Stamped-Datatypes-With-Tf2-Ros-MessageFilter.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Tf2/Using-Stamped-Datatypes-With-Tf2-Ros-MessageFilter.rst)、[Debugging-Tf2-Problems.rst](../../../source/Developer-Tools/Debugging/Debugging-Tf2-Problems/Debugging-Tf2-Problems.rst)
+> 📐 设计动机：[时钟与时间的设计](../../design/time-design.md)：三种时钟、`use_sim_time` 与 `/clock`、时间往回跳时 tf2 为什么清空缓存
 
 ## 1. 一句话定义
 
@@ -119,6 +120,7 @@ void on_point(const PointStamped::ConstSharedPtr & msg)
 - [执行器](../concurrency/executor.md)、[回调组](../concurrency/callback-group.md)：带超时的等待会阻塞执行器
 - [话题](../communication/topic.md)：MessageFilter 包装的就是一个订阅
 - 练习：[lookupTransform 的时间参数](../../labs/tf-time-lookup.md)、[四元数与 tf2 缓冲](../../labs/quaternion-buffer.md)
+- [时钟与时间的设计](../../design/time-design.md)（📐 设计动机）：时间跳变回调、`rclcpp::Rate` 的默认时钟
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/tf2-time-answers.md)）

@@ -10,6 +10,7 @@ aliases: [启动参数, 重映射, remap, ros-args, 命名空间, namespace, 名
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 上实测，rclcpp 33.2.0）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Node-arguments.rst](../../../source/Developer-Tools/Launch/Node-arguments.rst)、[Configuring-ROS2-Environment.rst](../../../source/Get-Started/Configuring-ROS2-Environment.rst)（只收 source 部分，Domain ID 与发现放第 7 批）
+> 📐 设计动机：[名字与重映射的设计](../../design/remapping-design.md)：规则的匹配和应用顺序、为什么用 `--ros-args`，以及设计里的通配符在 Rolling 还没实现
 
 ## 1. 一句话定义
 
@@ -80,6 +81,7 @@ ros2 run composition manual_composition --ros-args \
 - [日志](logging.md)：`--log-level`，logger 名跟着节点名变化
 - [tf2 坐标变换](../coordinates/tf2.md)：`/tf` 是绝对名，多机器人一般用 frame 前缀而不是重映射 `/tf`
 - 练习：[launch 与名字解析](../../labs/launch-and-names.md)
+- [名字与重映射的设计](../../design/remapping-design.md)（📐 设计动机）：`rostopic://` / `rosservice://` 只改一种名字、动作名的重映射
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/node-arguments-answers.md)）

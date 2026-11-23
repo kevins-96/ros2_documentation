@@ -15,6 +15,11 @@ find_package(action_msgs REQUIRED)
 find_package(rosidl_runtime_cpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(study_interfaces REQUIRED)
+find_package(rcl_interfaces REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(lifecycle_msgs REQUIRED)
+find_package(rosgraph_msgs REQUIRED)
+find_package(rclcpp_components REQUIRED)
 
 set(targets
   graph_mapping_probe
@@ -22,6 +27,10 @@ set(targets
   qos_semantics_lab
   action_result_cache
   msg_init_bench
+  remap_probe
+  param_design_probe
+  lifecycle_design_probe
+  time_design_probe
 )
 foreach(t ${targets})
   add_executable(${t} src/${t}.cpp)
@@ -31,9 +40,21 @@ foreach(t ${targets})
     ${action_msgs_TARGETS}
     rosidl_runtime_cpp::rosidl_runtime_cpp
     ${std_msgs_TARGETS}
-    ${study_interfaces_TARGETS})
+    ${study_interfaces_TARGETS}
+    ${rcl_interfaces_TARGETS}
+    rclcpp_lifecycle::rclcpp_lifecycle
+    ${lifecycle_msgs_TARGETS}
+    ${rosgraph_msgs_TARGETS})
 endforeach()
 
+# 第 9 批：组件（容器参数会不会传给动态加载的节点）
+add_library(name_probe_component SHARED src/name_probe_component.cpp)
+target_link_libraries(name_probe_component rclcpp::rclcpp rclcpp_components::component)
+rclcpp_components_register_nodes(name_probe_component "design_lab::NameProbe")
+install(TARGETS name_probe_component
+  ARCHIVE DESTINATION lib LIBRARY DESTINATION lib RUNTIME DESTINATION bin)
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
+
 install(TARGETS ${targets} DESTINATION lib/${PROJECT_NAME})
-install(PROGRAMS scripts/capture_dds_names.sh DESTINATION lib/${PROJECT_NAME})
+install(PROGRAMS scripts/capture_dds_names.sh scripts/signal_logger.sh DESTINATION lib/${PROJECT_NAME})
 ament_package()

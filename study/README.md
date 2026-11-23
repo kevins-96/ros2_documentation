@@ -4,7 +4,7 @@
 
 - **发行版：** ROS 2 Rolling
 - **打开方式：** 用 Obsidian 把仓库根目录作为 vault 打开，或用 VS Code 打开仓库后预览 Markdown（VS Code 需装扩展 *Markdown Preview Mermaid Support* 才能显示图）
-- **进度：** 见 [路线图](ROADMAP.md)。已完成：通信（第 1 批）、坐标与机器人模型（第 2 批）、配置与启停（第 3 批）、并发与实时性（样板 + 第 4 批）、工程化（第 5 批）、调试与观测（第 6 批）、中间件与部署（第 7 批）、设计理念 · 通信与中间件（第 8 批）
+- **进度：** 见 [路线图](ROADMAP.md)。已完成：通信（第 1 批）、坐标与机器人模型（第 2 批）、配置与启停（第 3 批）、并发与实时性（样板 + 第 4 批）、工程化（第 5 批）、调试与观测（第 6 批）、中间件与部署（第 7 批）、设计理念 · 通信与中间件（第 8 批）、设计理念 · 配置与启停（第 9 批）
 
 ## 四层结构
 
@@ -42,7 +42,7 @@ study/
     ├── build_lab/         工程化练习：path_smoother_core（库、插件基类、节点、测试）+ path_smoother_plugins（插件）
     ├── observe_lab/       调试与观测练习：fake_planner（被观察的假规划器）、bag 读写、图查询、回调时长统计脚本
     ├── mw_lab/            中间件与部署练习：mw_probe（连通性探针）、序列化基准、Fast DDS XML、SROS2 策略、compose 文件
-    ├── design_lab/        设计理念实测：名字映射、参与者、QoS 语义、动作结果缓存、消息初始化基准、DDS 抓包脚本
+    ├── design_lab/        设计理念实测：名字映射、参与者、QoS 语义、动作结果缓存、消息初始化基准、DDS 抓包脚本（第 8 批）；重映射、参数、生命周期、时间探针、组件和 launch 文件（第 9 批）
     └── executor_lab/      执行器练习与卡片示例代码
 ```
 
@@ -101,7 +101,7 @@ git clone --recurse-submodules https://github.com/kevins-96/ros2_documentation.g
 git submodule update --init external/ros2_design
 ```
 
-- 文章在 `external/ros2_design/articles/`。和笔记的对应关系见[路线图](ROADMAP.md)第 8 批的表格，表里的文件名可以直接在 `articles/` 里找到。
+- 文章在 `external/ros2_design/articles/`。和笔记的对应关系见[路线图](ROADMAP.md)第 8 批起各批的表格，表里的文件名可以直接在 `articles/` 里找到。
 - 用 Obsidian 或 VS Code 打开就能读。文首的 YAML 和 `{{ page.title }}` 是网站模板用的，不用管。
 - 大部分插图用 `../img/` 相对路径，离线能显示。`020_ros_with_dds.md`、`050_ros_rpc_design.md`、`node_lifecycle.md` 里的 4 张图写的是 `/img/...` 绝对路径，离线不显示，要去 `external/ros2_design/img/` 里找。
 - 拉 `pull` 时 submodule 不会自动更新，它会一直停在 `93a415b`。这是有意的：笔记的"设计 vs Rolling 对照"都以这个版本为准。
@@ -119,7 +119,8 @@ git submodule update --init external/ros2_design
 6. **调试与观测**：[命令行工具](cards/observability/cli-tools.md) → [服务与动作内省](cards/observability/service-introspection.md)（练习：[命令行与服务内省](labs/cli-and-introspection.md)）→ [rosbag 录制回放](cards/observability/rosbag.md) → [RViz 与可视化](cards/observability/rviz.md)（练习：[录制、回放与离线分析](labs/bag-record-replay.md)）→ [调试与回溯](cards/observability/gdb-debugging.md) → [tracing 性能追踪](cards/observability/tracing.md)（练习：[崩溃回溯与回调追踪](labs/crash-and-trace.md)）
 7. **中间件与部署**：[中间件 RMW 与 DDS](cards/middleware/rmw-dds.md) → [Domain ID 与发现](cards/middleware/domain-discovery.md)（练习：[中间件、Domain 与发现](labs/middleware-discovery.md)）→ [DDS 调优与 Fast DDS XML](cards/middleware/dds-tuning.md) → [Docker 部署](cards/middleware/docker-deploy.md)（练习：[DDS 调优、XML 配置与容器网络](labs/dds-and-docker.md)）→ [安全 SROS2](cards/middleware/sros2-security.md)（练习：[SROS2 密钥库、强制模式与访问控制](labs/sros2-keystore.md)）
 8. **设计理念**（学完 1 和 7 之后读）：[为什么有 ROS 2、为什么建在 DDS 上](design/why-ros2-dds.md) → [ROS 图怎么映射到 DDS](design/graph-to-dds-mapping.md) → [QoS 的设计](design/qos-design.md) → [服务与动作的设计](design/service-action-design.md) → [接口定义的设计](design/interface-design.md)（练习：[设计文档的说法在 Rolling 里还成立吗](labs/design-claims-check.md)）
-9. 文档原有内容的七批已全部完成；设计理念的后续批次和有意不收的文档见[路线图](ROADMAP.md)
+9. **配置与启停的设计**（学完 2、3 之后读）：[参数的设计](design/parameter-design.md) → [名字与重映射的设计](design/remapping-design.md) → [生命周期的设计](design/lifecycle-design.md) → [时钟与时间的设计](design/time-design.md) → [launch 的设计](design/launch-design.md)（练习：[配置与启停的设计还成立吗](labs/config-design-check.md)）
+10. 文档原有内容的七批已全部完成；设计理念的后续批次和有意不收的文档见[路线图](ROADMAP.md)
 
 ## 约定
 

@@ -57,7 +57,11 @@ mindmap
       ✅ QoS 的设计
       ✅ 服务与动作的设计
       ✅ 接口定义的设计
-      配置与启停的设计
+      ✅ 参数的设计
+      ✅ 名字与重映射的设计
+      ✅ 生命周期的设计
+      ✅ 时钟与时间的设计
+      ✅ launch 的设计
       并发与性能的设计
       安全与工程化的设计
 ```
@@ -124,4 +128,11 @@ Mermaid 节点在 Obsidian 和 VS Code 里都不能稳定地点击跳转，导�
   - [服务与动作的设计](../design/service-action-design.md)
   - [接口定义的设计](../design/interface-design.md)
   - 练习：[设计文档的说法在 Rolling 里还成立吗](../labs/design-claims-check.md)（覆盖上面五篇）
-  - 计划中：配置与启停的设计（第 9 批）、并发与性能的设计（第 10 批）、安全与工程化的设计（第 11 批），见 [路线图](../ROADMAP.md)
+  - 配置与启停的设计（第 9 批）：
+    - [参数的设计](../design/parameter-design.md)
+    - [名字与重映射的设计](../design/remapping-design.md)
+    - [生命周期的设计](../design/lifecycle-design.md)
+    - [时钟与时间的设计](../design/time-design.md)
+    - [launch 的设计](../design/launch-design.md)
+    - 练习：[配置与启停的设计还成立吗](../labs/config-design-check.md)（覆盖上面五篇）
+  - 计划中：并发与性能的设计（第 10 批）、安全与工程化的设计（第 11 批），见 [路线图](../ROADMAP.md)

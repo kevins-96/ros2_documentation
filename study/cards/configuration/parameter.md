@@ -10,6 +10,7 @@ aliases: [参数, parameter, declare_parameter, ros2 param, 参数文件, params
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 上编译实测，rclcpp 33.2.0）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Parameters.rst](../../../source/ROS-Framework/About-Parameters.rst)、[Working-with-parameters.rst](../../../source/ROS-Framework/parameters/Working-with-parameters.rst)、[Understanding-ROS2-Parameters.rst](../../../source/ROS-Framework/parameters/Working-with-parameters/Understanding-ROS2-Parameters/Understanding-ROS2-Parameters.rst)、[Using-ros2-param.rst](../../../source/ROS-Framework/parameters/Working-with-parameters/Using-ros2-param.rst)、[Using-Parameters-In-A-Class-CPP.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Using-Parameters-In-A-Class-CPP.rst)、[Monitoring-For-Parameter-Changes-CPP.rst](../../../source/ROS-Framework/parameters/Working-with-parameters/Monitoring-For-Parameter-Changes-CPP.rst)、[Node-arguments.rst](../../../source/Developer-Tools/Launch/Node-arguments.rst)（参数部分）
+> 📐 设计动机：[参数的设计](../../design/parameter-design.md)：为什么参数挂在节点上、没有全局参数服务器，原子设置和范围描述的用处，`-p 节点名:参数` 为什么对命名空间里的节点无效
 
 ## 1. 一句话定义
 
@@ -156,6 +157,7 @@ ros2 param load /planner planner.yaml     # 运行时批量加载
 - [QoS](../communication/qos.md)：`qos_overrides.*` 也是参数
 - [生命周期节点](lifecycle-node.md)：参数在构造时声明、在 configure 时读取
 - 练习：[参数的规则与陷阱](../../labs/parameter-rules.md)
+- [参数的设计](../../design/parameter-design.md)（📐 设计动机）：多个来源设同一参数时谁生效、`ros2 param set --atomic`
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/parameter-answers.md)）

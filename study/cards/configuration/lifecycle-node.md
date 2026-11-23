@@ -10,6 +10,7 @@ aliases: [生命周期节点, lifecycle node, managed node, 托管节点, Lifecy
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 上编译实测，rclcpp_lifecycle 33.2.0，launch_ros 0.30.3）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp_lifecycle 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Managed-Nodes.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/Managed-Nodes.rst)、[About-Nodes.rst](../../../source/ROS-Framework/About-Nodes.rst)（Lifecycle 段）、[Using-Node-Interfaces-Template-Class.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/Using-Node-Interfaces-Template-Class.rst)
+> 📐 设计动机：[生命周期的设计](../../design/lifecycle-design.md)：为什么是 4 个主状态 + 6 个转换状态，FAILURE 和 ERROR 分别把节点带到哪里，`transition_event` 为什么不是锁存的
 > 说明：仓库里这部分文档很薄（Managed-Nodes 只有概述和外链），本卡片的状态机细节主要来自 `rclcpp_lifecycle` 头文件和实测，标为 🔍。
 
 ## 1. 一句话定义
@@ -167,6 +168,7 @@ node_info(*lc_node);   // LifecycleNode
 - [话题](../communication/topic.md)：`LifecyclePublisher`
 - [组件与组合](../concurrency/component.md)：生命周期节点也可以做成组件
 - 练习：[生命周期状态切换](../../labs/lifecycle-transitions.md)
+- [生命周期的设计](../../design/lifecycle-design.md)（📐 设计动机）：设计与 Rolling 在失败处理、管理接口上的差别
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/lifecycle-node-answers.md)）

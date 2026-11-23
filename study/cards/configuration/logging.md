@@ -10,6 +10,7 @@ aliases: [日志, logging, RCLCPP_INFO, log level, 日志级别, rosout, rqt_con
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 上编译实测，rclcpp 33.2.0）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Logging.rst](../../../source/ROS-Framework/nodes/About-Logging/About-Logging.rst)、[Logging-and-logger-configuration.rst](../../../source/Developer-Tools/Introspection-and-analysis/Logging-and-logger-configuration.rst)、[Learning-About-Logging.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/Learning-About-Logging/Learning-About-Logging.rst)、[Using-Rqt-Console.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/Using-Rqt-Console/Using-Rqt-Console.rst)、[Node-arguments.rst](../../../source/Developer-Tools/Launch/Node-arguments.rst)（日志部分）
+> 📐 设计动机：[时钟与时间的设计](../../design/time-design.md)：节流宏用的节点时钟在仿真时间下为什么会"停住"
 
 ## 1. 一句话定义
 
@@ -99,6 +100,7 @@ ros2 run rqt_console rqt_console      # 图形界面：收集、过滤、保存 
 - [launch 启动系统](launch.md)：`ros_args="--log-level ..."`；`output="screen"` 与 stdout 的关系
 - [话题](../communication/topic.md)：`/rosout` 就是一个普通话题
 - 调试与观测：[rosbag 录制回放](../observability/rosbag.md)（`ros2 bag record -a` 会录 `/rosout`）、[tracing 性能追踪](../observability/tracing.md)、[RViz 与可视化](../observability/rviz.md)（`rqt_console`）
+- [时钟与时间的设计](../../design/time-design.md)（📐 设计动机）：ROS 时间不外推，`/clock` 停了时间就停
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/logging-answers.md)）
