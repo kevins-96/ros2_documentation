@@ -10,6 +10,7 @@ aliases: [话题服务动作怎么选, Topic vs Service vs Action]
 > 适用：ROS 2 **Rolling**
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Interfaces-Topics-Services-Actions.rst](../../../source/ROS-Framework/Interfaces-Topics-Services-Actions.rst)
+> 📐 设计动机：[为什么有 ROS 2、为什么建在 DDS 上](../../design/why-ros2-dds.md)；三种通信方式在 DDS 上怎么落地见 [服务与动作的设计](../../design/service-action-design.md)
 
 ## 1. 一句话定义
 
@@ -78,6 +79,7 @@ auto ac = rclcpp_action::create_client<study_interfaces::action::MoveTo>(node, "
 
 - [话题](topic.md) · [服务](service.md) · [动作](action.md) · [接口定义](interface-definition.md)
 - 动作底层就是 3 个服务 + 2 个话题，见 [动作卡片](action.md)
+- [服务与动作的设计](../../design/service-action-design.md)（📐 设计动机）：服务和动作都是在话题之上搭起来的
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/communication-patterns-answers.md)）

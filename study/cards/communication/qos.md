@@ -10,6 +10,7 @@ aliases: [QoS, 服务质量, Quality of Service]
 > 适用：ROS 2 **Rolling**，rclcpp（2026-11-17 在 `ros:rolling-ros-base`、rclcpp 33.2.0、默认 RMW `rmw_fastrtps_cpp` 上实测）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Quality-of-Service-Settings.rst](../../../source/ROS-Framework/interfaces/topics/About-Quality-of-Service-Settings.rst)、[Quality-of-Service.rst](../../../source/ROS-Framework/interfaces/topics/Working-with-topics/Quality-of-Service.rst)、[Configuring-QoS-Overrides.rst](../../../source/ROS-Framework/interfaces/topics/Working-with-topics/Configuring-QoS-Overrides.rst)
+> 📐 设计动机：[QoS 的设计](../../design/qos-design.md)：为什么只暴露 DDS QoS 的一部分、Deadline/Liveliness/Lifespan 实际量的是什么、为什么 overrides 要节点主动开启
 
 ## 1. 一句话定义
 
@@ -146,6 +147,7 @@ my_node:
 - 参数（第 3 批）：QoS overrides 是基于参数的
 - [rosbag 录制回放](../observability/rosbag.md)：rosbag 会自动适配发布者 QoS，transient local 话题录制前发出的消息也能录到；特殊情况用 `--qos-profile-overrides-path`
 - 练习：[QoS 不匹配时到底发生了什么](../../labs/qos-mismatch.md)
+- [QoS 的设计](../../design/qos-design.md)（📐 设计动机）：预设 profile 的取值理由、事件合并、Deadline 不能当控制看门狗
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/qos-answers.md)）

@@ -1,7 +1,7 @@
 # 总览脑图
 
 > 按**用途**组织：先问"我要解决什么问题"，再找概念。不沿用官方文档的目录。
-> ✅ = 已有卡片（下方清单里可点击）；其余为计划中的卡片，按批次补齐。每张卡片对应哪些源文档，见 [路线图](../ROADMAP.md)。
+> ✅ = 已有卡片或设计笔记（下方清单里可点击）；其余为计划中的内容，按批次补齐。每张卡片对应哪些源文档，见 [路线图](../ROADMAP.md)。
 
 ```mermaid
 mindmap
@@ -51,6 +51,15 @@ mindmap
       ✅ DDS 调优与 XML
       ✅ Docker 部署
       ✅ 安全 SROS2
+    📐 为什么这样设计
+      ✅ 为什么有 ROS 2 与 DDS
+      ✅ ROS 图到 DDS 的映射
+      ✅ QoS 的设计
+      ✅ 服务与动作的设计
+      ✅ 接口定义的设计
+      配置与启停的设计
+      并发与性能的设计
+      安全与工程化的设计
 ```
 
 ## 链接清单（与上图一一对应）
@@ -108,3 +117,11 @@ Mermaid 节点在 Obsidian 和 VS Code 里都不能稳定地点击跳转，导�
   - [Docker 部署](../cards/middleware/docker-deploy.md)
   - 练习：[DDS 调优、XML 配置与容器网络](../labs/dds-and-docker.md)（覆盖上面两张卡片）
   - [安全 SROS2](../cards/middleware/sros2-security.md) · 练习：[SROS2 密钥库、强制模式与访问控制](../labs/sros2-keystore.md)
+- **📐 为什么这样设计：设计理念**（第 8 批起，来自 [ros2/design](https://github.com/ros2/design)；学完对应卡片再读）
+  - [为什么有 ROS 2、为什么建在 DDS 上](../design/why-ros2-dds.md)
+  - [ROS 图怎么映射到 DDS：名字规则、`rt/` 前缀、节点与参与者](../design/graph-to-dds-mapping.md)
+  - [QoS 的设计](../design/qos-design.md)
+  - [服务与动作的设计](../design/service-action-design.md)
+  - [接口定义的设计](../design/interface-design.md)
+  - 练习：[设计文档的说法在 Rolling 里还成立吗](../labs/design-claims-check.md)（覆盖上面五篇）
+  - 计划中：配置与启停的设计（第 9 批）、并发与性能的设计（第 10 批）、安全与工程化的设计（第 11 批），见 [路线图](../ROADMAP.md)

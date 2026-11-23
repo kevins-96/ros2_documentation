@@ -10,6 +10,7 @@ aliases: [动作, Action, rclcpp_action, 目标反馈结果]
 > 适用：ROS 2 **Rolling**，rclcpp / rclcpp_action（2026-11-17 在 `ros:rolling-ros-base`、rclcpp 33.2.0 上实测）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Actions.rst](../../../source/ROS-Framework/interfaces/About-Actions.rst)、[Understanding-ROS2-Actions.rst](../../../source/ROS-Framework/interfaces/actions/Working-with-actions/Understanding-ROS2-Actions/Understanding-ROS2-Actions.rst)、[Writing-an-Action-Server-Client/Cpp.rst](../../../source/ROS-Framework/interfaces/actions/Working-with-actions/Writing-an-Action-Server-Client/Cpp.rst)、[Creating-an-Action.rst](../../../source/ROS-Framework/interfaces/actions/Working-with-actions/Creating-an-Action.rst)
+> 📐 设计动机：[服务与动作的设计](../../design/service-action-design.md)：为什么动作 = 3 个服务 + 2 个话题、目标 UUID 由客户端生成、结果缓存多久
 
 ## 1. 一句话定义
 
@@ -137,6 +138,7 @@ CMake：除了 `rclcpp` 还要 `rclcpp_action`；文档教程还用 `rclcpp_comp
 - [回调组](../concurrency/callback-group.md)、[执行器](../concurrency/executor.md)：服务端回调不能阻塞
 - [组件与组合](../concurrency/component.md)：文档教程把动作服务端写成组件
 - 练习：[动作服务端忙时来了新目标](../../labs/action-preempt.md)
+- [服务与动作的设计](../../design/service-action-design.md)（📐 设计动机）：结果默认缓存 10 s、status 话题的 QoS、反馈内容过滤
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/action-answers.md)）

@@ -10,6 +10,7 @@ aliases: [组件, component, 组合, composition, 组件容器, component contai
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 上编译实测，rclcpp / rclcpp_components 33.2.0，launch_ros 0.30.3）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Composition.rst](../../../source/ROS-Framework/nodes/About-Composition.rst)、[Composition.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/Composition.rst)、[Writing-a-Composable-Node.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/Writing-a-Composable-Node.rst)、[Launching-composable-nodes.rst](../../../source/Developer-Tools/Launch/Launching-composable-nodes.rst)
+> 📐 设计动机：[ROS 图怎么映射到 DDS](../../design/graph-to-dds-mapping.md)：同一个容器里的组件共用一个 DDS 参与者，`ignore_local_publications` 会把兄弟组件的消息也忽略掉
 
 ## 1. 一句话定义
 
@@ -153,6 +154,7 @@ ros2 launch perf_lab lidar_container_launch.xml ipc:=true
 - [launch 启动系统](../configuration/launch.md)：`node_container`、`composable_node`、`load_composable_node`
 - [生命周期节点](../configuration/lifecycle-node.md)：生命周期节点也可以做成组件
 - 练习：[组件与容器](../../labs/component-container.md)
+- [ROS 图怎么映射到 DDS](../../design/graph-to-dds-mapping.md)（📐 设计动机）：组件共享参与者带来的 `ignore_local_publications` 坑
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/component-answers.md)）

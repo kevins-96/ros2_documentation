@@ -10,6 +10,7 @@ aliases: [节点, Node, ROS 图]
 > 适用：ROS 2 **Rolling**，rclcpp（2026-11-17 在 `ros:rolling-ros-base`、rclcpp 33.2.0 上核实）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Nodes.rst](../../../source/ROS-Framework/About-Nodes.rst)、[How-ROS-Works.rst](../../../source/ROS-Framework/How-ROS-Works.rst)、[Understanding-ROS2-Nodes.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/Understanding-ROS2-Nodes/Understanding-ROS2-Nodes.rst)、[Using-Sub-Nodes.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/Using-Sub-Nodes.rst)
+> 📐 设计动机：[ROS 图怎么映射到 DDS](../../design/graph-to-dds-mapping.md)：为什么一个进程里的多个节点共用一个 DDS 参与者（participant），节点名在 DDS 里放在哪
 
 ## 1. 一句话定义
 
@@ -88,6 +89,7 @@ int main(int argc, char ** argv)
 - [话题 Topic](topic.md)、[服务 Service](service.md)、[动作 Action](action.md)：节点之间的三种通信方式，怎么选见 [通信方式怎么选](communication-patterns.md)
 - [执行器 Executor](../concurrency/executor.md)：节点只是登记回调，真正调用回调的是执行器
 - 参数、生命周期节点、组件（第 3、4 批）
+- [ROS 图怎么映射到 DDS](../../design/graph-to-dds-mapping.md)（📐 设计动机）：节点与 DDS 参与者的对应关系、名字规则的由来
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/node-answers.md)）

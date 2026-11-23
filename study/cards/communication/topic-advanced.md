@@ -10,6 +10,7 @@ aliases: [话题进阶, 内容过滤订阅, Content Filtering, 键控话题, Top
 > 适用：ROS 2 **Rolling**，rclcpp。三个功能都**依赖 RMW 实现支持**，换中间件前先查下表。
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Content-Filtering-Subscription.rst](../../../source/ROS-Framework/interfaces/topics/Working-with-topics/Content-Filtering-Subscription.rst)、[Topic-Keys-Tutorial.rst](../../../source/ROS-Framework/interfaces/topics/Working-with-topics/Topic-Keys/Topic-Keys-Tutorial.rst)、[Filtered-Topic-Keys-Tutorial.rst](../../../source/ROS-Framework/interfaces/topics/Working-with-topics/Topic-Keys/Filtered-Topic-Keys-Tutorial.rst)、[Wait-for-Acknowledgment.rst](../../../source/ROS-Framework/interfaces/topics/Working-with-topics/Wait-for-Acknowledgment.rst)
+> 📐 设计动机：[服务与动作的设计](../../design/service-action-design.md)：内容过滤最初是为动作反馈设计的，以及它在动作里为什么默认关闭
 
 ## 1. 一句话定义
 
@@ -91,6 +92,7 @@ if (publisher_->wait_for_all_acked(std::chrono::seconds(1))) {
 - [话题](topic.md)、[QoS](qos.md)：等待确认依赖 Reliable
 - [接口定义](interface-definition.md)：键控消息要用 `.idl`
 - 中间件与 RMW（第 7 批）：功能是否可用取决于 RMW
+- [服务与动作的设计](../../design/service-action-design.md)（📐 设计动机）：`enable_feedback_msg_optimization` 与内容过滤参数个数上限
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/topic-advanced-answers.md)）
