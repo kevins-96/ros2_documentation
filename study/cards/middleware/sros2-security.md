@@ -10,6 +10,7 @@ aliases: [安全, SROS2, sros2, DDS Security, 密钥库, keystore, enclave, 飞�
 > 适用：ROS 2 **Rolling**，Fast DDS 3.6.2，`sros2` 随 `ros-base` 安装（2026-11-17 实测）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Security.rst](../../../source/Developer-Tools/Launch/Security/About-Security.rst)、[Introducing-ros2-security.rst](../../../source/Developer-Tools/Launch/Security/Introducing-ros2-security.rst)、[Access-Controls.rst](../../../source/Developer-Tools/Launch/Security/Access-Controls.rst)、[Security-on-Two.rst](../../../source/Developer-Tools/Launch/Security/Security-on-Two.rst)、[The-Keystore.rst](../../../source/Developer-Tools/Build/The-Keystore.rst)、[Examine-Traffic.rst](../../../source/Developer-Tools/Introspection-and-analysis/Examine-Traffic.rst)
+> 📐 设计动机：[ROS 图怎么映射到 DDS](../../design/graph-to-dds-mapping.md)：SROS2 权限文件里写的是 DDS 名字（`rt/`、`rq/`、`rr/`），安全凭据为什么从"每个节点"变成"每个进程"（enclave）
 
 ## 1. 一句话定义
 
@@ -130,6 +131,7 @@ openssl smime -sign -text -in permissions.xml -out permissions.p7s \
 - [启动参数与重映射](../configuration/node-arguments.md)：`--enclave` / `-e`，以及重映射对访问控制的影响
 - [命令行工具](../observability/cli-tools.md)：daemon 和 `--no-daemon`
 - 练习：[SROS2 密钥库、强制模式与访问控制](../../labs/sros2-keystore.md)
+- [ROS 图怎么映射到 DDS](../../design/graph-to-dds-mapping.md)（📐 设计动机）：权限文件里的 DDS 话题名从哪来
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/sros2-security-answers.md)）

@@ -1,13 +1,14 @@
 # 路线图：卡片与源文档对照
 
 > 目的：说清楚每张卡片"吸收了哪些源文档"、哪些源文档有意不收。想核对原文时从这里跳。
-> 路径都相对仓库的 `source/` 目录。✅ = 已完成。
+> 第 1–7 批的路径都相对仓库的 `source/` 目录；第 8 批起的设计文档在 [ros2/design](https://github.com/ros2/design) 的 `articles/` 里。✅ = 已完成。
 
 ## 编写约定（所有批次通用）
 
 - 发行版 Rolling；C++ 代码在 `ros:rolling-ros-base` 镜像里编译实测，结果写进卡片或练习。
 - 卡片固定六段：一句话定义 → 为什么需要 → 最小 C++ 代码 → 常见坑 → 与其他概念的关系 → 2 道自测题（答案在 `answers/`）。
-- 来源标记：📄 文档原文 · 🔍 源码或实测核实 · 💡 经验补充。
+- 来源标记：📄 文档原文 · 🔍 源码或实测核实 · 💡 经验补充 · 📐 [ros2/design](https://github.com/ros2/design) 设计文档原文（第 8 批起）。
+- 设计笔记（`design/`）固定六段：设计要回答的问题 → 考虑过的方案与取舍 → 设计与 Rolling 现状对照 → 对写代码的影响 → 与其他概念的关系 → 2 道自测题。
 - **全库文件名不重名**（卡片 `xxx.md`，答案 `xxx-answers.md`），以后改用 `[[wikilink]]` 只需按文件名替换。每张卡片的 frontmatter 有 `aliases`，Obsidian 里搜中文名也能找到。
 
 ## 第 1 批：让模块互相说话（通信）✅
@@ -142,6 +143,43 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 - 多台机器用两个 Docker 容器（同一个 bridge 网络）模拟；SROS2 的抓包在 `lo` 上用 `tcpdump` 做。
 
 本批实测发现的值得注意之处（详见各卡片"常见坑"）：两个 `network_mode: host` 的容器默认互相收不到（Fast DDS 走共享内存而 `/dev/shm` 不共享），没有任何报错；`ros2 daemon` 只按 Domain ID 和 RMW 区分，后来改的 `ROS_DISCOVERY_SERVER` 等变量它看不到；文档的 Super Client XML 在 Fast DDS 3 里解析失败并被整个忽略，`fastdds discovery -i` 已弃用；Fast DDS XML 教程对默认发布模式的说法自相矛盾，源码是同步；XML profile 名必须带 `/`，分区和匹配数上限在 CLI 里看不出来，匹配数上限时被拒的订阅端仍报告 `matched=1`；`nav_msgs/Path` 序列化比同样字节数的 `PointCloud2` 慢约 50 倍；`ipfrag_high_thresh` 新内核默认 4 MB 而不是文档说的 256 KB；SROS2 不设 `Enforce` 时配错会悄悄降级，permissions 绑定创建时的 Domain ID，改名或重映射会被访问控制在启动时拒绝，加密后 enclave 名字仍是明文；容器里 root 生成的私钥权限是 `666`；部署教程的 Dockerfile 下载链接 404、默认 `humble`，预期输出里 talker/listener 写反；安全教程的 `zenohd` 应为 `rmw_zenohd`。
+
+## 第 8 批：设计理念 · 通信与中间件 ✅（待合并）
+
+来源换成了 [ros2/design](https://github.com/ros2/design)（Apache-2.0，固定在提交 `93a415b`，2026-11-23 读取）。设计文档讲"为什么这样设计"，很多是早期提案，所以每篇笔记都有一张"设计 vs Rolling 现状"对照表，标 📐 的句子只代表设计意图。设计文档没有复制进本仓库，笔记里的引用都链接到固定提交，原文改了也不影响对照。
+
+| 设计笔记 | 吸收的设计文档（`articles/`） |
+|---|---|
+| ✅ [为什么有 ROS 2、为什么建在 DDS 上](design/why-ros2-dds.md) | [`010_why_ros2.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/010_why_ros2.md)、[`020_ros_with_dds.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/020_ros_with_dds.md)、[`030_ros_with_zeromq.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/030_ros_with_zeromq.md)、[`040_stories.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/040_stories.md)、[`changes.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/changes.md) |
+| ✅ [ROS 图怎么映射到 DDS](design/graph-to-dds-mapping.md) | [`140_topic_and_service_name_mapping.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/140_topic_and_service_name_mapping.md)、[`170_node_to_participant_mapping.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/170_node_to_participant_mapping.md) |
+| ✅ [QoS 的设计](design/qos-design.md) | [`qos.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/qos.md)、[`qos_deadline_liveliness_lifespan.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/qos_deadline_liveliness_lifespan.md)、[`qos_configurability.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/qos_configurability.md) |
+| ✅ [服务与动作的设计](design/service-action-design.md) | [`050_ros_rpc_design.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/050_ros_rpc_design.md)、[`actions.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/actions.md)、[`content_filtering.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/content_filtering.md)（动机部分） |
+| ✅ [接口定义的设计](design/interface-design.md) | [`110_interface_definition.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/110_interface_definition.md)（已被取代，只核对）、[`111_mapping_dds_types.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/111_mapping_dds_types.md)、[`112_generated_interfaces_cpp.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/112_generated_interfaces_cpp.md)、[`115_idl.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/115_idl.md)、[`116_legacy_interface_definition.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/116_legacy_interface_definition.md)、[`117_wide_strings.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/117_wide_strings.md) |
+
+练习：✅ [设计文档的说法在 Rolling 里还成立吗](labs/design-claims-check.md)，代码在 `labs/design_lab/`（5 个程序 + 抓包脚本），`study_interfaces` 新增 `FixedGrid.msg`。现有卡片（节点、话题、QoS、服务、动作、接口定义、话题进阶、通信方式、RMW 与 DDS、SROS2、组件）顶部加了"📐 设计动机"链接。
+
+调整说明：
+- 设计文档不按原目录收，按"学完哪批卡片后读"分组；每篇笔记对应 2–6 篇设计文档。
+- `114_generated_interfaces_python.md` 不收（以 C++ 为主）；`060_ros_middleware_interface.md` 和 `serialization.md` 放到第 10 批，和零拷贝、进程内通信一起讲。
+- 实测环境：`ros:rolling-ros-base`，rclcpp 33.2.0，rcl / rcl_action 10.6.0，`rmw_fastrtps_cpp` 9.6.1，Fast DDS 3.6.2，`rosidl_generator_cpp` 5.3.2。只测了 Fast DDS。
+
+本批实测发现的设计与现状差异（详见各笔记的对照表）：
+- **名字**：设计禁止 `__`，实际接受；`rostopic://` 写法没实现；长度上限是完整名字 247 个字符（`255U - 8U`），不是"含前缀 256"；`avoid_ros_namespace_conventions` 只去掉 `rt` 前缀，命名空间和开头的 `/` 照样保留；设计里的 `rs`/`rp`/`ra` 前缀没有用上，参数就是普通服务，动作走 `_action/` 名字。
+- **参与者**：一个 Context 一个参与者（Foxy 起），`ros_discovery_info` 在 rclcpp 里订阅不到；`ignore_local_publications` 忽略的是同一个参与者，同进程的兄弟节点、组件也被忽略。
+- **QoS**：Deadline 只在 rmw 层计量；事件会合并（一次回调报 `total_count_change=10`）；`MANUAL_BY_NODE` 已删，新增 `BestAvailable`；Fast DDS 上同一个参与者里的 AUTOMATIC 发布后约 300 ms 误报 not_alive；服务和动作不支持 Deadline 等；外部配置的"隐藏参数"没实现。
+- **服务与动作**：协议里没有超时，超时的请求要自己清理；服务不能取消；rclcpp_action 客户端**用了** `status` 话题（设计说只用于内省）；结果默认缓存 10 s，过期后 `status` 话题不会重发，迟到的订阅者仍看到 SUCCEEDED；反馈内容过滤默认关闭，最多 6 个目标（参数上限 100，每个 UUID 占 16）。
+- **接口**：`byte` → `unsigned char`、`char` → `uint8_t`（设计是 `std::byte`、`char`）；有界字符串在赋值、序列化、反序列化时都不检查；常量生成 `static constexpr` 而不是 `enum`；`MessageInitialization::ZERO` 反而最慢（生成代码把数组清零两次），`DEFAULTS_ONLY` 接近 0；Fast DDS 类型支持直接序列化 ROS 结构体，没有设计里那次"拷贝成 DDS 类型"。
+- **整体**：`rmw_zenoh_cpp` 不是 DDS，Kilted 起是 Tier 1（设计里"所有 rmw 都基于 DDS"已过时）。
+
+## 第 9–11 批：设计理念（计划，按顺序做，每批一个 PR）
+
+| 批次 | 设计笔记（暂定） | 设计文档（`articles/`） | 学完哪批卡片后读 |
+|---|---|---|---|
+| 第 9 批：配置与启停的设计 | 参数的设计；名字、重映射与命令行参数的设计；launch 的设计；生命周期节点的设计；时钟与时间的设计 | `055_ros_parameter_design.md`、`141_static_remapping.md`、`160_ros_command_line_arguments.md`、`150_roslaunch.md`、`151_roslaunch_xml.md`、`152_roslaunch_frontend.md`、`node_lifecycle.md`、`130_ros_time.md` | 第 2、3 批 |
+| 第 10 批：并发与性能的设计 | 实时系统的设计；进程内通信与零拷贝的设计；rmw 接口与序列化的设计 | `120_realtime_background.md`、`121_realtime_proposal.md`、`intraprocess_communication.md`、`zero_copy.md`、`060_ros_middleware_interface.md`、`serialization.md`、`unique_network_flows.md` | 第 4、7 批 |
+| 第 11 批：安全与工程化的设计 | DDS 安全与 enclave 的设计；威胁模型；构建系统的设计；发现与协商 | `180_ros2_dds_security.md`、`181_ros2_access_control_policies.md`、`182_ros2_security_enclaves.md`、`183_ros2_threat_model.md`、`100_ament.md`、`101_build_tool.md`、`cross_compilation_build_tools_design.md`、`discovery_and_negotiation.md` | 第 5、7 批 |
+
+设计文档里有意不收：`080_ros_documentation_system.md`、`per_package_documentation.md`（写文档系统）、`200_migration_guide_from_ros1.md`（ROS 1 迁移）、`114_generated_interfaces_python.md`（Python）。
 
 ## 有意不收（需要时告诉我再补）
 

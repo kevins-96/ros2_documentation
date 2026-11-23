@@ -10,6 +10,7 @@ aliases: [中间件, RMW, rmw, DDS, RTPS, Fast DDS, Cyclone DDS, Connext, Zenoh,
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 容器里实测，Fast DDS 3.6.2；镜像里只装了 `rmw_fastrtps_cpp`）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Middleware.rst](../../../source/ROS-Framework/About-Middleware.rst)、[About-Middleware-Implementations.rst](../../../source/ROS-Framework/middleware/About-Middleware-Implementations.rst)、[About-Different-Middleware-Vendors.rst](../../../source/ROS-Framework/middleware/About-Different-Middleware-Vendors.rst)、[RMW-Implementations/](../../../source/Get-Started/Installation/RMW-Implementations.rst)（含 [Working-with-Zenoh.rst](../../../source/Get-Started/Installation/RMW-Implementations/Non-DDS-Implementations/Working-with-Zenoh.rst)）
+> 📐 设计动机：[为什么有 ROS 2、为什么建在 DDS 上](../../design/why-ros2-dds.md)：DDS 与 ZeroMQ 等方案的取舍、"DDS 是实现细节"原则，以及 Zenoh 成为 Tier 1 后这条原则的意义
 
 ## 1. 一句话定义
 
@@ -103,6 +104,7 @@ RMW_IMPLEMENTATION=rmw_zenoh_cpp ros2 run <包> <节点>   # 其他终端
 - [安全 SROS2](sros2-security.md)：DDS Security 插件
 - [进程内通信与零拷贝](../concurrency/intra-process.md)：同进程时绕过 rmw 序列化
 - 练习：[中间件、Domain 与发现](../../labs/middleware-discovery.md)
+- [为什么有 ROS 2、为什么建在 DDS 上](../../design/why-ros2-dds.md)（📐 设计动机）：rmw 抽象层为什么存在
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/rmw-dds-answers.md)）

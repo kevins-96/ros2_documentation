@@ -9,6 +9,7 @@ find_package(std_msgs REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Pose2D.msg"
   "msg/PathStatus.msg"
+  "msg/FixedGrid.msg"
   "srv/ComputePath.srv"
   "action/MoveTo.action"
   DEPENDENCIES std_msgs

@@ -10,6 +10,7 @@ aliases: [话题, Topic, 发布订阅, Publisher, Subscription]
 > 适用：ROS 2 **Rolling**，rclcpp（2026-11-17 在 `ros:rolling-ros-base`、rclcpp 33.2.0 上核实）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Topics.rst](../../../source/ROS-Framework/interfaces/About-Topics.rst)、[Understanding-ROS2-Topics.rst](../../../source/ROS-Framework/interfaces/topics/Understanding-ROS2-Topics/Understanding-ROS2-Topics.rst)、[Writing-A-Simple-Cpp-Publisher-And-Subscriber.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Writing-A-Simple-Cpp-Publisher-And-Subscriber.rst)
+> 📐 设计动机：[ROS 图怎么映射到 DDS](../../design/graph-to-dds-mapping.md)：话题名为什么在 DDS 里变成 `rt/...`、名字长度上限从哪来
 
 ## 1. 一句话定义
 
@@ -96,6 +97,7 @@ private:
 - [接口定义](interface-definition.md)：`.msg` 文件怎么写、怎么生成代码
 - [话题进阶](topic-advanced.md)：内容过滤订阅、键控话题、等待确认
 - [执行器](../concurrency/executor.md)：订阅回调什么时候、在哪个线程被调用
+- [ROS 图怎么映射到 DDS](../../design/graph-to-dds-mapping.md)（📐 设计动机）：`rt/` 前缀、名字替换 `{node}`、名字长度预算
 - 上一级：[通信方式怎么选](communication-patterns.md) · [总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/topic-answers.md)）

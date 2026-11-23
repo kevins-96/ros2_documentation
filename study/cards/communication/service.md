@@ -10,6 +10,7 @@ aliases: [服务, Service, 请求响应, 客户端]
 > 适用：ROS 2 **Rolling**，rclcpp（2026-11-17 在 `ros:rolling-ros-base`、rclcpp 33.2.0 上核实）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[About-Services.rst](../../../source/ROS-Framework/interfaces/About-Services.rst)、[Sync-Vs-Async.rst](../../../source/ROS-Framework/interfaces/services/Working-with-services/Sync-Vs-Async.rst)、[Writing-A-Simple-Cpp-Service-And-Client.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Writing-A-Simple-Cpp-Service-And-Client.rst)、[Understanding-ROS2-Services.rst](../../../source/ROS-Framework/interfaces/services/Working-with-services/Understanding-ROS2-Services/Understanding-ROS2-Services.rst)
+> 📐 设计动机：[服务与动作的设计](../../design/service-action-design.md)：RPC 为什么分成 rcl 层和客户端库两层、请求怎么用 writer GUID + 序号配对
 
 ## 1. 一句话定义
 
@@ -95,6 +96,7 @@ if (rclcpp::spin_until_future_complete(node, future) == rclcpp::FutureReturnCode
 - [回调组](../concurrency/callback-group.md)：同步调用不死锁的条件
 - [QoS](qos.md)：服务默认 Reliable + Volatile
 - [接口定义](interface-definition.md)：`.srv` 文件格式
+- [服务与动作的设计](../../design/service-action-design.md)（📐 设计动机）：请求/响应在 DDS 里是两个话题 `rq/`、`rr/`，超时请求要自己清理
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/service-answers.md)）
