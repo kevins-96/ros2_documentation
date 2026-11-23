@@ -10,6 +10,7 @@ aliases: [进程内通信, intra-process, IPC, 零拷贝, zero copy, loaned mess
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 上编译实测，rclcpp 33.2.0，默认 RMW `rmw_fastrtps_cpp`）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Intra-Process-Communication.rst](../../../source/ROS-Framework/nodes/Working-with-nodes/intra-process/Intra-Process-Communication.rst)、[Configure-ZeroCopy-loaned-messages.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Configure-ZeroCopy-loaned-messages.rst)、[About-Buffer-Backends.rst](../../../source/ROS-Framework/interfaces/Working-with-interfaces/Buffer-Backends/About-Buffer-Backends.rst)、[Using-Buffer-Backends.rst](../../../source/ROS-Framework/interfaces/Working-with-interfaces/Buffer-Backends/Using-Buffer-Backends.rst)
+> 📐 设计动机：[进程内通信与零拷贝的设计](../../design/intra-process-design.md)：为什么缓冲区放在每个订阅者一侧、复制次数规则、`transient_local` 怎么处理、借用消息订阅端默认关闭
 
 ## 1. 一句话定义
 
@@ -114,6 +115,7 @@ pod_pub->publish(std::move(loaned));              // 发布后借来的消息失
 - [接口定义](../communication/interface-definition.md)：`uint8[]` 在 Rolling 生成 `rosidl::Buffer`
 - 中间件 RMW 与 DDS（第 7 批）：借用消息、共享内存、Buffer 后端都依赖 RMW
 - 练习：[进程内通信与零拷贝](../../labs/intra-process-zero-copy.md)
+- [进程内通信与零拷贝的设计](../../design/intra-process-design.md)（📐 设计动机）：旧实现的元消息、队列翻倍的开放问题、借用消息不经过进程内通信
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/intra-process-answers.md)）

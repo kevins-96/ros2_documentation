@@ -10,6 +10,7 @@ aliases: [DDS 调优, DDS tuning, Fast DDS XML, FASTDDS_DEFAULT_PROFILES_FILE, R
 > 适用：ROS 2 **Rolling**，Fast DDS 3.6.2（2026-11-17 实测；`rmw_fastrtps` 源码取自当天的 GitHub 默认分支）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[DDS-tuning.rst](../../../source/Developer-Tools/Build/DDS-tuning.rst)、[FastDDS-Configuration.rst](../../../source/Developer-Tools/Launch/FastDDS-Configuration.rst)
+> 📐 设计动机：[rmw 接口与序列化的设计](../../design/rmw-serialization-design.md)：序列化的代价取决于消息结构；用原生句柄读 Fast DDS 的 `publish_mode`；唯一网络流在 Fast DDS 上只支持订阅端
 
 ## 1. 一句话定义
 
@@ -108,6 +109,7 @@ nav_msgs::msg::Path path;
 - [进程内通信与零拷贝](../concurrency/intra-process.md)：同进程时根本不序列化
 - [tracing 性能追踪](../observability/tracing.md)：量 `publish()` 在回调里花了多久
 - 练习：[DDS 调优、XML 配置与容器网络](../../labs/dds-and-docker.md)
+- [rmw 接口与序列化的设计](../../design/rmw-serialization-design.md)（📐 设计动机）：拷贝 vs 序列化实测、网络流端点
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/dds-tuning-answers.md)）

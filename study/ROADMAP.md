@@ -171,7 +171,7 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 - **接口**：`byte` → `unsigned char`、`char` → `uint8_t`（设计是 `std::byte`、`char`）；有界字符串在赋值、序列化、反序列化时都不检查；常量生成 `static constexpr` 而不是 `enum`；`MessageInitialization::ZERO` 反而最慢（生成代码把数组清零两次），`DEFAULTS_ONLY` 接近 0；Fast DDS 类型支持直接序列化 ROS 结构体，没有设计里那次"拷贝成 DDS 类型"。
 - **整体**：`rmw_zenoh_cpp` 不是 DDS，Kilted 起是 Tier 1（设计里"所有 rmw 都基于 DDS"已过时）。
 
-## 第 9 批：设计理念 · 配置与启停 ✅（待合并）
+## 第 9 批：设计理念 · 配置与启停 ✅
 
 | 设计笔记 | 吸收的设计文档（`articles/`） |
 |---|---|
@@ -225,11 +225,47 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
   - 前端采用的是抽象描述解析（`Entity` 加 `@expose_action`）。
   - XML 注释里写 `--` 会让整个文件解析失败。
 
-## 第 10–11 批：设计理念（计划，按顺序做，每批一个 PR）
+## 第 10 批：设计理念 · 并发与性能 ✅（待合并）
+
+| 设计笔记 | 吸收的设计文档（`articles/`） |
+|---|---|
+| ✅ [实时系统的设计](design/realtime-design.md) | [`120_realtime_background.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/120_realtime_background.md)、[`121_realtime_proposal.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/121_realtime_proposal.md) |
+| ✅ [进程内通信与零拷贝的设计](design/intra-process-design.md) | [`intraprocess_communication.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/intraprocess_communication.md)、[`zero_copy.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/zero_copy.md) |
+| ✅ [rmw 接口与序列化的设计](design/rmw-serialization-design.md) | [`060_ros_middleware_interface.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/060_ros_middleware_interface.md)、[`serialization.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/serialization.md)、[`unique_network_flows.md`](https://github.com/ros2/design/blob/93a415bf928751d37fce6f83215c521658e20c93/articles/unique_network_flows.md) |
+
+练习：✅ [并发与性能的设计还成立吗](labs/perf-design-check.md)。代码放在 `labs/design_lab/`，本批新增 3 个探针程序 `rt_alloc_probe`、`ipc_design_probe`、`rmw_probe`；`study_interfaces` 新增 `FixedBlock.msg`（1 MB 定长、没有字符串，用来测借用消息和序列化）。`design_lab` 因为 `rmw_probe` 新增了对 `rmw_fastrtps_cpp`、`fastdds`、`geometry_msgs` 的依赖。现有卡片中，实时编程、进程内通信与零拷贝、执行器、中间件 RMW 与 DDS、DDS 调优、接口定义这 6 张加了"📐 设计动机"链接。
+
+调整说明：
+- 计划里的三篇照原样写。`serialization.md` 写于选定 DDS 之前，管线 B 那部分已在第 8 批的 [为什么有 ROS 2、为什么建在 DDS 上](design/why-ros2-dds.md) 讲过，本批只补实测。
+- 实测环境：`ros:rolling-ros-base`，rclcpp 33.2.0，rmw_fastrtps_cpp 9.6.1，Fast DDS 3.6.2，rosidl 5.3.2；rosdistro 信息取自 2026-11-23 的 `rolling/distribution.yaml`。
+
+本批实测发现的设计与现状差异（详见各笔记的对照表）：
+- **实时**：
+  - 自定义分配器只接管消息本身那一次分配，每条消息还有约 3 次系统 `new` 发生在 Fast DDS 和 rmw 的 take 路径里；进程内通信路径也一样。
+  - 服务、客户端、参数没有分配器参数；rmw 没有"实时"QoS 预设。
+  - `StaticSingleThreadedExecutor` 已从 Rolling 删除。
+  - 24 字节的 `std::atomic<Pose>` 不是无锁的。
+  - `realtime_support`（`rttest`、`tlsf_cpp`）和 `rclc` 仍在 rosdistro 里，freertps 已经没有了。
+- **进程内通信**：
+  - 每个订阅者一个缓冲区、`transient_local` 晚到者、只用可靠性判兼容，都和设计一致；`/_intra` 话题已经没有了。
+  - `KeepAll` 不是"无界 FIFO"，而是发布者、订阅者两端都直接抛异常。
+  - 同时收进程内外消息时队列翻倍的开放问题仍然存在：深度 3 收到 6 条。
+  - `publish(shared_ptr)` 等弃用的重载已删除。
+- **借用消息**：
+  - API 改名为 `borrow_loaned_message()`、`is_valid()`。
+  - 订阅端默认不借（rcl 默认 `disable_loaned_message = true`，`ROS_DISABLE_LOANED_MESSAGES=0` 才开）。打开后同进程订阅者收到的地址和借出的地址相同。
+  - `publish(LoanedMessage)` 不走进程内通信。
+- **rmw 与序列化**：
+  - 可以通过 `rmw_fastrtps_cpp::get_datawriter` 拿到原生句柄，读到 `publish_mode = SYNCHRONOUS`。
+  - rosdistro 里已有非 DDS 的 rmw（zenoh、email、unix socket），没有 OpenSplice。
+  - "序列化比拷贝慢两个数量级"不成立：1 MB 平坦数组只慢 1.2 倍，1 MB `PoseArray` 慢 15.9 倍。
+  - `@optional` 能写但在 C++ 里没效果；不支持字典。
+- **唯一网络流**：Fast DDS 只支持订阅端（换端口 7001、7002…），发布者用 `STRICTLY_REQUIRED` 会创建失败；流标签和 DSCP 都是 0。
+
+## 第 11 批：设计理念（计划）
 
 | 批次 | 设计笔记（暂定） | 设计文档（`articles/`） | 学完哪批卡片后读 |
 |---|---|---|---|
-| 第 10 批：并发与性能的设计 | 实时系统的设计；进程内通信与零拷贝的设计；rmw 接口与序列化的设计 | `120_realtime_background.md`、`121_realtime_proposal.md`、`intraprocess_communication.md`、`zero_copy.md`、`060_ros_middleware_interface.md`、`serialization.md`、`unique_network_flows.md` | 第 4、7 批 |
 | 第 11 批：安全与工程化的设计 | DDS 安全与 enclave 的设计；威胁模型；构建系统的设计；发现与协商 | `180_ros2_dds_security.md`、`181_ros2_access_control_policies.md`、`182_ros2_security_enclaves.md`、`183_ros2_threat_model.md`、`100_ament.md`、`101_build_tool.md`、`cross_compilation_build_tools_design.md`、`discovery_and_negotiation.md` | 第 5、7 批 |
 
 设计文档里有意不收：`080_ros_documentation_system.md`、`per_package_documentation.md`（写文档系统）、`200_migration_guide_from_ros1.md`（ROS 1 迁移）、`114_generated_interfaces_python.md`（Python）。

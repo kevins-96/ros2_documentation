@@ -20,6 +20,9 @@ find_package(rclcpp_lifecycle REQUIRED)
 find_package(lifecycle_msgs REQUIRED)
 find_package(rosgraph_msgs REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(rmw_fastrtps_cpp REQUIRED)
+find_package(fastdds REQUIRED)
 
 set(targets
   graph_mapping_probe
@@ -31,6 +34,8 @@ set(targets
   param_design_probe
   lifecycle_design_probe
   time_design_probe
+  rt_alloc_probe
+  ipc_design_probe
 )
 foreach(t ${targets})
   add_executable(${t} src/${t}.cpp)
@@ -46,6 +51,20 @@ foreach(t ${targets})
     ${lifecycle_msgs_TARGETS}
     ${rosgraph_msgs_TARGETS})
 endforeach()
+
+# rt_alloc_probe 自己替换了全局 operator new/delete（malloc/free），GCC 内联后会误报不匹配
+set_source_files_properties(src/rt_alloc_probe.cpp PROPERTIES COMPILE_OPTIONS -Wno-mismatched-new-delete)
+
+# 第 10 批：rmw_probe 要用 rmw_fastrtps_cpp 的扩展 API 拿 Fast DDS 原生句柄
+add_executable(rmw_probe src/rmw_probe.cpp)
+target_link_libraries(rmw_probe
+  rclcpp::rclcpp
+  ${std_msgs_TARGETS}
+  ${geometry_msgs_TARGETS}
+  ${study_interfaces_TARGETS}
+  rmw_fastrtps_cpp::rmw_fastrtps_cpp
+  fastdds)
+list(APPEND targets rmw_probe)
 
 # 第 9 批：组件（容器参数会不会传给动态加载的节点）
 add_library(name_probe_component SHARED src/name_probe_component.cpp)

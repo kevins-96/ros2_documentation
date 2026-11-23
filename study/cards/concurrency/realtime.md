@@ -10,6 +10,7 @@ aliases: [实时编程, real-time, realtime, 抖动, jitter, mlockall, SCHED_FIF
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 容器里实测，rclcpp 33.2.0；容器跑在普通 Linux 内核上，**不是** RT_PREEMPT）
 > 来源标记：📄 仓库文档原文 · 🔍 源码或实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Real-Time-Programming.rst](../../../source/Capabilities/Motion-planning/Real-Time-Programming.rst)、[Allocator-Template-Tutorial.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Allocator-Template-Tutorial.rst)、[Building-Realtime-rt_preempt-kernel-for-ROS-2.rst](../../../source/Developer-Tools/Build/Building-Realtime-rt_preempt-kernel-for-ROS-2/Building-Realtime-rt_preempt-kernel-for-ROS-2.rst)
+> 📐 设计动机：[实时系统的设计](../../design/realtime-design.md)：硬/固/软实时按失效模式分类、ROS 2 为什么选"rcl/rmw 实时安全 + 语言封装"，以及自定义分配器在 Rolling 上只能挡住消息本身那一次分配
 
 ## 1. 一句话定义
 
@@ -123,6 +124,7 @@ void run_control_loop(std::atomic<bool> & running, long period_ns)
 - [组件与组合](component.md)：多个节点放进同一进程
 - [tracing 性能追踪](../observability/tracing.md)：用 ros2_tracing 找延迟来源；回调超过周期时定时器不补发
 - 练习：[实时循环的抖动](../../labs/realtime-jitter.md)
+- [实时系统的设计](../../design/realtime-design.md)（📐 设计动机）：分配器计划做到了哪一步、`std::atomic` 何时不是无锁的
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/realtime-answers.md)）

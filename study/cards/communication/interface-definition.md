@@ -10,7 +10,7 @@ aliases: [接口定义, msg, srv, action, 自定义消息, rosidl]
 > 适用：ROS 2 **Rolling**（2026-11-17 在 `ros:rolling-ros-base` 上编译实测）
 > 来源标记：📄 仓库文档原文 · 🔍 rclcpp 源码/实测核实 · 💡 经验补充（可信，但请自己验证）
 > 源文档：[Interface-specifications.rst](../../../source/ROS-Framework/interfaces/Working-with-interfaces/Interface-specifications.rst)、[Custom-ROS2-Interfaces.rst](../../../source/ROS-Framework/client-libraries/Working-with-Client-Libraries/Custom-ROS2-Interfaces.rst)、[Single-Package-Define-And-Use-Interface.rst](../../../source/ROS-Framework/interfaces/Working-with-interfaces/Single-Package-Define-And-Use-Interface.rst)、[Creating-an-Action.rst](../../../source/ROS-Framework/interfaces/actions/Working-with-actions/Creating-an-Action.rst)
-> 📐 设计动机：[接口定义的设计](../../design/interface-design.md)：`.msg` 为什么先转成 `.idl`、生成的 C++ 结构体为什么不提供位置参数构造函数、`MessageInitialization` 各模式的代价
+> 📐 设计动机：[接口定义的设计](../../design/interface-design.md)：`.msg` 为什么先转成 `.idl`、生成的 C++ 结构体为什么不提供位置参数构造函数、`MessageInitialization` 各模式的代价；[rmw 接口与序列化的设计](../../design/rmw-serialization-design.md)：`@optional` 能写但没效果、不支持字典、CDR 的字节数
 
 ## 1. 一句话定义
 
@@ -124,6 +124,7 @@ msg.waypoints.resize(2);                              // 有界数组，最多 1
 - [话题进阶](topic-advanced.md)：键控话题需要用 IDL 的 `@key` 注解
 - [ament_cmake](../engineering/ament-cmake.md)：`rosidl_generate_interfaces` 也是 ament 扩展点；包结构见 [工作空间与 colcon](../engineering/workspace-colcon.md)
 - [接口定义的设计](../../design/interface-design.md)（📐 设计动机）：类型映射表、有界类型在哪一层检查、builder 与 setter
+- [rmw 接口与序列化的设计](../../design/rmw-serialization-design.md)（📐 设计动机）：可选字段、字典、序列化成本
 - 上一级：[总览脑图](../../map/overview.md)
 
 ## 6. 自测题（先自己答，再看[答案](../../answers/interface-definition-answers.md)）

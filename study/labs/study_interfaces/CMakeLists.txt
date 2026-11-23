@@ -10,6 +10,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/Pose2D.msg"
   "msg/PathStatus.msg"
   "msg/FixedGrid.msg"
+  "msg/FixedBlock.msg"
   "srv/ComputePath.srv"
   "action/MoveTo.action"
   DEPENDENCIES std_msgs
