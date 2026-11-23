@@ -146,7 +146,7 @@ Python 版（`Tf2/*-Py.rst`、`Using-URDF-with-Robot-State-Publisher-py.rst`）�
 
 ## 第 8 批：设计理念 · 通信与中间件 ✅（待合并）
 
-来源换成了 [ros2/design](https://github.com/ros2/design)（Apache-2.0，固定在提交 `93a415b`，2026-11-23 读取）。设计文档讲"为什么这样设计"，很多是早期提案，所以每篇笔记都有一张"设计 vs Rolling 现状"对照表，标 📐 的句子只代表设计意图。设计文档没有复制进本仓库，笔记里的引用都链接到固定提交，原文改了也不影响对照。
+来源换成了 [ros2/design](https://github.com/ros2/design)（Apache-2.0，固定在提交 `93a415b`，2026-11-23 读取）。设计文档讲"为什么这样设计"，很多是早期提案，所以每篇笔记都有一张"设计 vs Rolling 现状"对照表，标 📐 的句子只代表设计意图。设计文档原文没有复制进 `study/`，笔记里的引用都链接到固定提交，原文以后改了也不影响对照。想离线读原文，可以用仓库根目录的 git submodule `external/ros2_design/`，它固定在同一个提交，用法见 [README](README.md)。
 
 | 设计笔记 | 吸收的设计文档（`articles/`） |
 |---|---|
