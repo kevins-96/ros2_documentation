@@ -65,7 +65,11 @@ mindmap
       ✅ 实时系统的设计
       ✅ 进程内通信与零拷贝的设计
       ✅ rmw 接口与序列化的设计
-      安全与工程化的设计
+      ✅ 安全的设计
+      ✅ 访问控制策略的设计
+      ✅ 威胁模型
+      ✅ 构建系统的设计
+      ✅ 发现与协商的设计
 ```
 
 ## 链接清单（与上图一一对应）
@@ -142,4 +146,10 @@ Mermaid 节点在 Obsidian 和 VS Code 里都不能稳定地点击跳转，导�
     - [进程内通信与零拷贝的设计](../design/intra-process-design.md)
     - [rmw 接口与序列化的设计](../design/rmw-serialization-design.md)
     - 练习：[并发与性能的设计还成立吗](../labs/perf-design-check.md)（覆盖上面三篇）
-  - 计划中：安全与工程化的设计（第 11 批），见 [路线图](../ROADMAP.md)
+  - 安全与工程化的设计（第 11 批）：
+    - [安全的设计：DDS-Security 插件、enclave 为什么是每个进程](../design/security-design.md)
+    - [访问控制策略的设计：XML、并集、DENY 优先、通配符](../design/access-control-design.md)
+    - [威胁模型：STRIDE + DREAD，SROS2 挡得住和挡不住的](../design/threat-model-design.md)
+    - [构建系统的设计：ament、colcon、交叉编译](../design/build-system-design.md)
+    - [发现与协商的设计：计算图与数据层图、图事件与存活性](../design/discovery-negotiation-design.md)
+    - 练习：[安全与工程化的设计还成立吗](../labs/security-build-design-check.md)（覆盖上面五篇）
